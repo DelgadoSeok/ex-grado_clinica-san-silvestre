@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Menú Admin - Dueños</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles_duenos.css') }}">
+    
+    <script>
+        function descartarDueno(id) {
+    if (!confirm("¿Estás seguro de que deseas descartar este dueño?")) {
+        return;
+    }
+
+    console.log("Enviando solicitud para descartar dueño con ID:", id); // Para depuración
+
+    fetch('/duenos/descartar', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id: id })
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log("Respuesta del servidor:", data); // Para depuración
+        alert(data.message);
+        location.reload();
+    })
+    .catch(error => console.error('Error al descartar dueño:', error));
+}
+
+        function toggleMenu() {
+            document.body.classList.toggle('menu-open');
+        }
+
+        function openModal() {
+            document.getElementById('modal').style.display = 'block';
+        }
+
+        function closeModal() {
+            document.getElementById('modal').style.display = 'none';
+        }
+
+        function openEditModal(id, nombres, apellidos, ci, telf, direccion) {
+    console.log("Abriendo modal con datos:", id, nombres, apellidos, ci, telf, direccion); // Para depuración
+
+    document.getElementById("edit_id").value = id;
+    document.getElementById("edit_nombre").value = nombres;
+    document.getElementById("edit_apellido").value = apellidos;
+    document.getElementById("edit_ci").value = ci;
+    document.getElementById("edit_telefono").value = telf;
+    document.getElementById("edit_direccion").value = direccion;
+
+    document.getElementById("editModal").style.display = "block";
+}
+
+
+        function closeEditModal() {
+            document.getElementById("editModal").style.display = "none";
+        }
+
+        function registrarDueno() {
+            let nombres = document.getElementById("nombre").value;
+            let apellidos = document.getElementById("apellido").value;
+            let ci = document.getElementById("ci").value;
+            let telf = document.getElementById("telefono").value;
+            let direccion = document.getElementById("direccion").value;
+
+            fetch('/duenos/registrar', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ nombres, apellidos, ci, telf, direccion })
+            })
+            .then(response => response.json())
+            .then(data => {
+                alert(data.message);
+                location.reload();
+            })
+            .catch(error => console.error('Error:', error));
+        }
+
+        function editarDueno() {
+    let id = document.getElementById("edit_id").value;
+    let nombres = document.getElementById("edit_nombre").value;
+    let apellidos = document.getElementById("edit_apellido").value;
+    let ci = document.getElementById("edit_ci").value;
+    let telf = document.getElementById("edit_telefono").value;
+    let direccion = document.getElementById("edit_direccion").value;
+
+    console.log("Enviando datos para editar:", { id, nombres, apellidos, ci, telf, direccion }); // Para depuración
+
+    fetch('/duenos/editar', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id, nombres, apellidos, ci, telf, direccion })
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log("Respuesta del servidor:", data); // Para depuración
+        alert(data.message);
+        location.reload();
+    })
+    .catch(error => console.error('Error:', error));
+}
+
+    </script>
+</head>
+
+<body>
+    <button class="menu-button" onclick="toggleMenu()">☰</button>
+    <div class="menu-container">
+        <button class="close-button" onclick="toggleMenu()">✖</button>
+        <h2>Administrador</h2>
+        <ul>
+            <li class="green-option">Dueños</li>
+            <li><a href="/inquilinos">Inquilinos</a></li>
+            <li><a href="/puestos">Puestos</a></li>
+            <li><a href="/contratos">Contratos</a></li>
+            <li><a href="/pagos">Pagos</a></li>
+            <li><a href="/egresos">Egresos</a></li>
+        </ul>
+        <div class="logout"><a href="/login">Cerrar Sesión</a></div>
+    </div>
+
+    <div class="content">
+        <h2>Bienvenido</h2>
+        <p>Seleccione una opción del menú.</p>
+
+        <div class="section">
+            <div class="section-header">
+                <h3>Gestión de Dueños</h3>
+                <button onclick="openModal()">Crear Dueño</button>
+            </div>
+
+            <!-- Modal para registrar dueño -->
+            <div id="modal" class="modal">
+                <div class="modal-content">
+                    <span class="close" onclick="closeModal()">&times;</span>
+                    <h4>Crear Dueño</h4>
+                    <form id="duenoForm" onsubmit="event.preventDefault(); registrarDueno();">
+                        <label for="nombre">Nombre:</label>
+                        <input type="text" id="nombre" required>
+                        <label for="apellido">Apellido:</label>
+                        <input type="text" id="apellido" required>
+                        <label for="ci">Número de carnet:</label>
+                        <input type="text" id="ci" required>
+                        <label for="telefono">Teléfono:</label>
+                        <input type="tel" id="telefono" required>
+                        <label for="direccion">Dirección:</label>
+                        <input type="text" id="direccion" required>
+                        <button type="submit">Guardar</button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Modal para Editar Dueño -->
+<div id="editModal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeEditModal()">&times;</span>
+        <h4>Editar Dueño</h4>
+        <form id="editDuenoForm" onsubmit="event.preventDefault(); editarDueno();">
+            <input type="hidden" id="edit_id">
+            <label for="edit_nombre">Nombre:</label>
+            <input type="text" id="edit_nombre" required>
+            <label for="edit_apellido">Apellido:</label>
+            <input type="text" id="edit_apellido" required>
+            <label for="edit_ci">Número de carnet:</label>
+            <input type="text" id="edit_ci" required>
+            <label for="edit_telefono">Teléfono:</label>
+            <input type="tel" id="edit_telefono" required>
+            <label for="edit_direccion">Dirección:</label>
+            <input type="text" id="edit_direccion" required>
+            <button type="submit">Actualizar</button>
+        </form>
+    </div>
+</div>
+
+
+            <h3>Lista de Dueños</h3>
+            <table border="1">
+                <thead>
+                    <tr>
+                        <th>Nombre</th>
+                        <th>Apellido</th>
+                        <th>CI</th>
+                        <th>Teléfono</th>
+                        <th>Dirección</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% if duenos %}
+                        {% for dueno in duenos %}
+                        <tr>
+                            <td>{{ dueno.nombres }}</td>
+                            <td>{{ dueno.apellidos }}</td>
+                            <td>{{ dueno.ci }}</td>
+                            <td>{{ dueno.telefono }}</td>
+                            <td>{{ dueno.direccion }}</td>
+                            <td>
+                                <button class="btn btn-edit" onclick="openEditModal(
+                                    '{{ dueno.id }}',
+                                    '{{ dueno.nombres }}',
+                                    '{{ dueno.apellidos }}',
+                                    '{{ dueno.ci }}',
+                                    '{{ dueno.telefono }}',
+                                    '{{ dueno.direccion }}'
+                                )">Editar</button>
+                                
+                                <button class="btn btn-danger"onclick="descartarDueno('{{ dueno.id }}')">Descartar</button>
+                            </td>
+                            
+                        </tr>
+                        {% endfor %}
+                    {% else %}
+                        <tr>
+                            <td colspan="6" style="text-align: center;">No hay dueños registrados.</td>
+                        </tr>
+                    {% endif %}
+                </tbody>
+                
+                
+                
+                
+            </table>
+        </div>
+    </div>
+</body>
+</html>

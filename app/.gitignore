@@ -1,0 +1,14 @@
+# Ignorar entorno virtual
+/venv/
+
+# Ignorar archivos generados por Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.cpython-*
+*.so
+*.cpython
+
+# Ignorar el archivo .env (que puede contener datos sensibles)
+/.env

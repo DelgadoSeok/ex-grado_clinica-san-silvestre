@@ -1,0 +1,295 @@
+body {
+    background-image: url("data:image/svg+xml,<svg id='patternId' width='100%' height='100%' xmlns='http://www.w3.org/2000/svg'><defs><pattern id='a' patternUnits='userSpaceOnUse' width='70' height='70' patternTransform='scale(3) rotate(15)'><rect x='0' y='0' width='100%' height='100%' fill='hsla(240,6.7%,17.6%,1)'/><path d='M-4.8 4.44L4 16.59 16.14 7.8M32 30.54l-13.23 7.07 7.06 13.23M-9 38.04l-3.81 14.5 14.5 3.81M65.22 4.44L74 16.59 86.15 7.8M61 38.04l-3.81 14.5 14.5 3.81'  stroke-linejoin='round' stroke-linecap='round' stroke-width='0.5' stroke='%23a7cd2cff' fill='none'/><path d='M59.71 62.88v3h3M4.84 25.54L2.87 27.8l2.26 1.97m7.65 16.4l-2.21-2.03-2.03 2.21m29.26 7.13l.56 2.95 2.95-.55'  stroke-linejoin='round' stroke-linecap='round' stroke-width='0.5' stroke='%23cee891ff' fill='none'/><path d='M58.98 27.57l-2.35-10.74-10.75 2.36M31.98-4.87l2.74 10.65 10.65-2.73M31.98 65.13l2.74 10.66 10.65-2.74'  stroke-linejoin='round' stroke-linecap='round' stroke-width='0.5' stroke='%2350c8c6ff' fill='none'/><path d='M8.42 62.57l6.4 2.82 2.82-6.41m33.13-15.24l-4.86-5.03-5.03 4.86m-14-19.64l4.84-5.06-5.06-4.84'  stroke-linejoin='round' stroke-linecap='round' stroke-width='0.5' stroke='%23a7cd2cff' fill='none'/></pattern></defs><rect width='800%' height='800%' transform='translate(-72,-60)' fill='url(%23a)'/></svg>");
+    font-family: Arial, sans-serif;
+    background-color: #f0f0f0;
+    color: #ddd;
+    margin: 0;
+    padding: 0;
+    display: flex;
+}
+
+.menu-container {
+    width: 250px;
+    background-color: #282828;
+    height: calc(100vh - 40px);
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.8);
+}
+
+.menu-container h2 {
+    color: white;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.menu-container ul {
+    list-style: none;
+    padding: 0;
+    flex-grow: 1;
+}
+
+.menu-container ul li {
+    padding: 15px;
+    border-bottom: 1px solid #444;
+    transition: background 0.3s;
+    cursor: pointer;
+}
+
+.menu-container ul li:hover {
+    background-color: #555;
+}
+
+.green-option {
+    background-color: #50c8c6;
+}
+
+.content {
+    padding: 20px;
+    flex-grow: 1;
+}
+
+.section {
+    background-color: white;
+    border-radius: 10px;
+    color: #333;
+    padding: 20px;
+    margin-top: 20px;
+}
+
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.section-header h3 {
+    margin: 0;
+}
+
+.section-header button {
+    background-color: #a7cd2c;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.section-header button:hover {
+    background-color: #50c8c6;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+table th,
+table td {
+    border: 1px solid #ddd;
+    padding: 8px;
+}
+
+table th {
+    background-color: #f2f2f2;
+}
+
+table tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+table tr:hover {
+    background-color: #f1f1f1;
+}
+
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100vh;
+    overflow: auto;
+    background-color: rgb(0, 0, 0);
+    background-color: rgba(0, 0, 0, 0.4);
+}
+
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.modal-content {
+    border-radius: 20px;
+    width: 600px;
+    background-color: #fefefe;
+    margin: 5vh auto;
+    padding: 20px;
+    border: 1px solid #888;
+}
+
+.modal-content form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 0 40px;
+}
+
+.modal-content form label {
+    align-self: flex-start;
+    margin-top: 10px;
+}
+
+.modal-content form input {
+    width: 100%;
+    padding: 10px;
+    margin-top: 5px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+}
+
+.modal-content h4 {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.modal-content button {
+    background-color: #a7cd2c;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 20px;
+}
+
+.modal-content button:hover {
+    background-color: #50c8c6;
+}
+
+.logout {
+    padding: 15px;
+    text-align: center;
+    background-color: #d9534f;
+    border-radius: 5px;
+    margin-top: 20px;
+    transition: background 0.3s;
+    cursor: pointer;
+}
+
+.logout:hover {
+    background-color: #c9302c;
+}
+
+.menu-button {
+    display: none;
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background: none;
+    border: none;
+    font-size: 24px;
+    color: white;
+    cursor: pointer;
+}
+
+.menu-button,
+.close-button {
+    display: none;
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background: none;
+    border: none;
+    font-size: 24px;
+    color: white;
+    cursor: pointer;
+}
+
+@media (max-width: 1280px) {
+    table th:nth-child(3),
+    table th:nth-child(4),
+    table th:nth-child(5),
+    table td:nth-child(3),
+    table td:nth-child(4),
+    table td:nth-child(5) {
+        display: none;
+    }
+
+    .menu-container {
+        transform: translateX(-100%);
+        width: calc(100% - 40px);
+        height: calc(100vh - 40px);
+        position: fixed;
+        background-color: rgba(40, 40, 40, 0.92);
+        transition: ease .3s;
+    }
+
+    .menu-button {
+        display: block;
+        position: fixed;
+    }
+
+    .close-button {
+        display: block;
+        position: absolute;
+        top: 10px;
+        right: 10px;
+    }
+
+    .content {
+        margin-left: 0;
+        padding: 20px;
+    }
+
+    .modal-content {
+        width: calc(100% - 80px);
+        margin: 20px;
+    }
+
+    .menu-open .menu-container {
+        transform: translateX(0);
+        transition: ease .3s;
+    }
+
+
+}
+/* Estilo base para los botones */
+.btn {
+    background-color: #a7cd2c; /* Verde por defecto */
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background 0.3s ease;
+}
+
+/* Efecto hover */
+.btn:hover {
+    background-color: #50c8c6; /* Azul claro */
+}
+
+/* Estilo específico para el botón "Descartar" */
+.btn-danger {
+    background-color: #d9534f !important; /* Rojo */
+}
+
+.btn-danger:hover {
+    background-color: #c9302c !important; /* Rojo oscuro */
+}
