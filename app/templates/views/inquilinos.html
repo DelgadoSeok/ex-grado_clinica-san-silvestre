@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Menú Admin - Inquilinos</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='styles_inquilinos.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles_inquilinos.css') }}">
 
     <script>
         function toggleMenu() {
@@ -21,97 +21,84 @@
         }
 
         function registrarInquilino() {
-        let nombres = document.getElementById("nombre").value;
-        let apellidos = document.getElementById("apellido").value;
-        let ci = document.getElementById("ci").value;
-        let telf = document.getElementById("telefono").value;
-        let direccion = document.getElementById("direccion").value;
+            let nombres = document.getElementById("nombre").value;
+            let apellidos = document.getElementById("apellido").value;
+            let ci = document.getElementById("ci").value;
+            let telf = document.getElementById("telefono").value;
+            let direccion = document.getElementById("direccion").value;
 
-        console.log("Enviando:", { nombres, apellidos, ci, telf, direccion });  // Depuración
+            console.log("Enviando:", { nombres, apellidos, ci, telf, direccion });  // Depuración
 
-        fetch('/inquilinos/registrar', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ nombres, apellidos, ci, telf, direccion })
-        })
-        .then(response => response.json())
-        .then(data => {
-            console.log("Respuesta recibida:", data);
-            alert(data.message);
-            location.reload();
-        })
-        .catch(error => console.error('Error:', error));
-    }
-    document.addEventListener("DOMContentLoaded", function () {
-        document.getElementById('inquilinoForm').addEventListener('submit', function (event) {
-            event.preventDefault();
-            registrarInquilino();
+            fetch('/inquilinos/registrar', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ nombres, apellidos, ci, telf, direccion })
+            })
+                .then(response => response.json())
+                .then(data => {
+                    console.log("Respuesta recibida:", data);
+                    alert(data.message);
+                    location.reload();
+                })
+                .catch(error => console.error('Error:', error));
+        }
+        document.addEventListener("DOMContentLoaded", function () {
+            document.getElementById('inquilinoForm').addEventListener('submit', function (event) {
+                event.preventDefault();
+                registrarInquilino();
+            });
         });
-    });
 
         function descartarInquilino(id) {
             if (confirm("¿Estás seguro de que quieres descartar este inquilino?")) {
                 fetch(`/inquilinos/descartar/${id}`, { method: 'POST' })
+                    .then(response => response.json())
+                    .then(data => {
+                        alert(data.message);
+                        location.reload();
+                    })
+                    .catch(error => console.error('Error:', error));
+            }
+        }
+
+        function cargarDatosInquilino(id, nombre, apellido, ci, telefono, direccion) {
+            document.getElementById("edit_id").value = id;
+            document.getElementById("edit_nombre").value = nombre;
+            document.getElementById("edit_apellido").value = apellido;
+            document.getElementById("edit_ci").value = ci;
+            document.getElementById("edit_telefono").value = telefono;
+            document.getElementById("edit_direccion").value = direccion;
+            document.getElementById('editModal').style.display = 'block';
+        }
+
+        function editarInquilino() {
+            let id = document.getElementById("edit_id").value;
+            let nombres = document.getElementById("edit_nombre").value;
+            let apellidos = document.getElementById("edit_apellido").value;
+            let ci = document.getElementById("edit_ci").value;
+            let telf = document.getElementById("edit_telefono").value;
+            let direccion = document.getElementById("edit_direccion").value;
+
+            fetch(`/inquilinos/editar/${id}`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ nombres, apellidos, ci, telf, direccion })
+            })
                 .then(response => response.json())
                 .then(data => {
                     alert(data.message);
                     location.reload();
                 })
                 .catch(error => console.error('Error:', error));
-            }
         }
-
-        function cargarDatosInquilino(id, nombre, apellido, ci, telefono, direccion) {
-        document.getElementById("edit_id").value = id;
-        document.getElementById("edit_nombre").value = nombre;
-        document.getElementById("edit_apellido").value = apellido;
-        document.getElementById("edit_ci").value = ci;
-        document.getElementById("edit_telefono").value = telefono;
-        document.getElementById("edit_direccion").value = direccion;
-        document.getElementById('editModal').style.display = 'block';
-    }
-
-function editarInquilino() {
-        let id = document.getElementById("edit_id").value;
-        let nombres = document.getElementById("edit_nombre").value;
-        let apellidos = document.getElementById("edit_apellido").value;
-        let ci = document.getElementById("edit_ci").value;
-        let telf = document.getElementById("edit_telefono").value;
-        let direccion = document.getElementById("edit_direccion").value;
-
-        fetch(`/inquilinos/editar/${id}`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ nombres, apellidos, ci, telf, direccion })
-        })
-        .then(response => response.json())
-        .then(data => {
-            alert(data.message);
-            location.reload();
-        })
-        .catch(error => console.error('Error:', error));
-    }
 
     </script>
 </head>
 
 <body>
-    <button class="menu-button" onclick="toggleMenu()">☰</button>
-    <div class="menu-container">
-        <button class="close-button" onclick="toggleMenu()">✖</button>
-        <div>
-            <h2>Administrador</h2>
-            <ul>
-                <li><a href="/duenos">Dueños</a></li>
-                <li class="green-option">Inquilinos</li>
-                <li><a href="/puestos">Puestos</a></li>
-                <li><a href="/contratos">Contratos</a></li>
-                <li><a href="/pagos">Pagos</a></li>
-                <li><a href="/egresos">Egresos</a></li>
-            </ul>
-        </div>
-        <div class="logout"><a href="/login">Cerrar Sesión</a></div>
-    </div>
+    <!-- Incluyendo menu desde partials -->
+    {% include 'partials/menu.html' %}
+
     <div class="content">
         <h2>Bienvenido :D</h2>
         <p>Seleccione una opción del menú.</p>
@@ -143,7 +130,8 @@ function editarInquilino() {
             <!-- Modal de Edición -->
             <div id="editModal" class="modal">
                 <div class="modal-content">
-                    <span class="close" onclick="document.getElementById('editModal').style.display='none'">&times;</span>
+                    <span class="close"
+                        onclick="document.getElementById('editModal').style.display='none'">&times;</span>
                     <h4>Editar Inquilino</h4>
                     <form id="editInquilinoForm">
                         <input type="hidden" id="edit_id">
@@ -178,15 +166,15 @@ function editarInquilino() {
                 </thead>
                 <tbody>
                     {% if inquilinos %}
-                        {% for inquilino in inquilinos %}
-                        <tr>
-                            <td>{{ inquilino[1] }}</td>
-                            <td>{{ inquilino[2] }}</td>
-                            <td>{{ inquilino[3] }}</td>
-                            <td>{{ inquilino[4] }}</td>
-                            <td>{{ inquilino[5] }}</td>
-                            <td>
-                                <button class="btn btn-edit" onclick="cargarDatosInquilino(
+                    {% for inquilino in inquilinos %}
+                    <tr>
+                        <td>{{ inquilino[1] }}</td>
+                        <td>{{ inquilino[2] }}</td>
+                        <td>{{ inquilino[3] }}</td>
+                        <td>{{ inquilino[4] }}</td>
+                        <td>{{ inquilino[5] }}</td>
+                        <td>
+                            <button class="btn btn-edit" onclick="cargarDatosInquilino(
                                     '{{ inquilino[0] }}', 
                                     '{{ inquilino[1] }}', 
                                     '{{ inquilino[2] }}', 
@@ -194,15 +182,16 @@ function editarInquilino() {
                                     '{{ inquilino[4] }}', 
                                     '{{ inquilino[5] }}'
                                 )">Editar</button>
-                                
-                                <button class="btn btn-danger" onclick="descartarInquilino('{{ inquilino[0] }}')">Descartar</button>
-                            </td>
-                        </tr>
-                        {% endfor %}
+
+                            <button class="btn btn-danger"
+                                onclick="descartarInquilino('{{ inquilino[0] }}')">Descartar</button>
+                        </td>
+                    </tr>
+                    {% endfor %}
                     {% else %}
-                        <tr>
-                            <td colspan="6" style="text-align: center;">No hay inquilinos registrados.</td>
-                        </tr>
+                    <tr>
+                        <td colspan="6" style="text-align: center;">No hay inquilinos registrados.</td>
+                    </tr>
                     {% endif %}
                 </tbody>
             </table>

@@ -10,7 +10,7 @@ puestos_bp = Blueprint('puestos', __name__, url_prefix='/puestos')
 @puestos_bp.route('/', methods=['GET'])
 def mostrar_puestos():
     puestos = obtener_puestos()
-    return render_template('puestos.html', puestos=puestos)
+    return render_template('views/puestos.html', puestos=puestos)
 
 @puestos_bp.route('/listar', methods=['GET'])
 def listar_puestos():

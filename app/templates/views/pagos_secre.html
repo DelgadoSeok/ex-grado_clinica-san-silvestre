@@ -5,7 +5,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Menú Secretario - Pagos</title>
-  <link rel="stylesheet" href="{{ url_for('static', filename='styles_pagos.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/styles_pagos.css') }}">
 
   <script>
     function toggleMenu() {
@@ -28,47 +28,47 @@
       // let deuda_id = document.getElementById("deuda_id").value;
 
       fetch('/pagos_secre/crear_deudas', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ 
-              // puesto_id: parseInt(puesto_id),
-              fecha: fecha,
-              monto: parseFloat(monto)
-              // monto_interes: parseFloat(monto_interes),
-              // deuda_id: parseInt(deuda_id)
-          })
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          // puesto_id: parseInt(puesto_id),
+          fecha: fecha,
+          monto: parseFloat(monto)
+          // monto_interes: parseFloat(monto_interes),
+          // deuda_id: parseInt(deuda_id)
+        })
       })
-      .then(response => response.json())
-      .then(data => {
+        .then(response => response.json())
+        .then(data => {
           alert(data.message);
           location.reload();
-      })
-      .catch(error => console.error('Error:', error));
+        })
+        .catch(error => console.error('Error:', error));
     }
 
     function registrar_pago(deuda_id, deuda_monto, deuda_interes) {
-    fetch(`/pagos_secre/registrar_pago/`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({ deuda_id: deuda_id, deuda_monto: deuda_monto, deuda_interes: deuda_interes })
-    })
-    .then(response => response.json())
-    .then(data => {
-      if (data.success) {
-        alert('Pago registrado exitosamente');
-        window.open(`/pagos_secre/reporte/${deuda_id}`, '_blank');
-        location.reload();
-      } else {
-        alert('Error al registrar el pago');
-      }
-    })
-    .catch(error => {
-      console.error('Error:', error);
-      alert('Error al registrar el pago');
-    });
-  }
+      fetch(`/pagos_secre/registrar_pago/`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ deuda_id: deuda_id, deuda_monto: deuda_monto, deuda_interes: deuda_interes })
+      })
+        .then(response => response.json())
+        .then(data => {
+          if (data.success) {
+            alert('Pago registrado exitosamente');
+            window.open(`/pagos_secre/reporte/${deuda_id}`, '_blank');
+            location.reload();
+          } else {
+            alert('Error al registrar el pago');
+          }
+        })
+        .catch(error => {
+          console.error('Error:', error);
+          alert('Error al registrar el pago');
+        });
+    }
 
 
     document.addEventListener("DOMContentLoaded", function () {
@@ -82,19 +82,9 @@
 </head>
 
 <body>
-  <button class="menu-button" onclick="toggleMenu()">☰</button>
-  <div class="menu-container">
-    <button class="close-button" onclick="toggleMenu()">✖</button>
-    <div>
-      <h2>Secretario</h2>
-      <ul>
-        <li><a href="/deudas_secre">Deudas</a></li>
-        <li class="green-option">Pagos</li>
-        <li><a href="/egresos_secre">Egresos</a></li>
-      </ul>
-    </div>
-    <div class="logout"><a href="/login">Cerrar Sesión</a></div>
-  </div>
+  <!-- Incluyendo menu desde partials -->
+  {% include 'partials/menu.html' %}
+  
   <div class="content">
     <h2>Bienvenido :D</h2>
     <p>Seleccione una opción del menú.</p>
@@ -121,7 +111,7 @@
             <!-- <label for="deuda_id">Deuda ID:</label>
             <input type="number" id="deuda_id" name="deuda_id" required> -->
             <button type="submit">Guardar</button>
-        </form>
+          </form>
         </div>
       </div>
       <!-- Tabla para mostrar los pagos -->
@@ -146,7 +136,8 @@
             <td>{{ deuda[4] }}</td>
             <td>{{ "{:,.2f}".format(deuda[2]) }}</td>
             <td>{{ deuda[6] }}</td>
-            <td><button onclick="registrar_pago('{{ deuda[0] }}', '{{ deuda[2] }}', '{{ deuda[6] }}')">Registrar Pago</button></td>
+            <td><button onclick="registrar_pago('{{ deuda[0] }}', '{{ deuda[2] }}', '{{ deuda[6] }}')">Registrar
+                Pago</button></td>
           </tr>
           {% endfor %}
         </tbody>

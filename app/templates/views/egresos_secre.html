@@ -18,130 +18,6 @@
       display: flex;
     }
 
-    .menu-container {
-      width: 250px;
-      background-color: #282828;
-      height: calc(100vh - 40px);
-      padding: 20px;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      box-shadow: 0 0 10px rgba(0, 0, 0, 0.8);
-    }
-
-    .menu-container h2 {
-      color: white;
-      text-align: center;
-      margin-bottom: 20px;
-    }
-
-    .menu-container ul {
-      list-style: none;
-      padding: 0;
-      flex-grow: 1;
-    }
-
-    .menu-container ul li {
-      padding: 15px;
-      border-bottom: 1px solid #444;
-      transition: background 0.3s;
-      cursor: pointer;
-    }
-
-    .menu-container ul li:hover {
-      background-color: #555;
-    }
-
-    .green-option {
-      background-color: #50c8c6;
-    }
-
-    .content {
-      padding: 20px;
-      flex-grow: 1;
-    }
-
-    .section {
-      background-color: white;
-      border-radius: 10px;
-      color: #333;
-      padding: 20px;
-      margin-top: 20px;
-    }
-
-    .section-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 20px;
-    }
-
-    .section-header h3 {
-      margin: 0;
-    }
-
-    .section-header button {
-      background-color: #a7cd2c;
-      color: white;
-      border: none;
-      padding: 10px 20px;
-      border-radius: 5px;
-      cursor: pointer;
-    }
-
-    .section-header button:hover {
-      background-color: #50c8c6;
-    }
-
-    table {
-      width: 100%;
-      border-collapse: collapse;
-    }
-
-    table th,
-    table td {
-      border: 1px solid #ddd;
-      padding: 8px;
-    }
-
-    table th {
-      background-color: #f2f2f2;
-    }
-
-    table tr:nth-child(even) {
-      background-color: #f9f9f9;
-    }
-
-    table tr:hover {
-      background-color: #f1f1f1;
-    }
-
-    .modal {
-      display: none;
-      position: fixed;
-      z-index: 1;
-      left: 0;
-      top: 0;
-      width: 100%;
-      height: 100vh;
-      overflow: auto;
-      background-color: rgba(0, 0, 0, 0.4);
-    }
-
-    .close {
-      color: #aaa;
-      float: right;
-      font-size: 28px;
-      font-weight: bold;
-    }
-
-    .close:hover,
-    .close:focus {
-      color: black;
-      text-decoration: none;
-      cursor: pointer;
-    }
-
     .modal-content {
       border-radius: 20px;
       width: 600px;
@@ -192,20 +68,6 @@
       background-color: #50c8c6;
     }
 
-    .logout {
-      padding: 15px;
-      text-align: center;
-      background-color: #d9534f;
-      border-radius: 5px;
-      margin-top: 20px;
-      transition: background 0.3s;
-      cursor: pointer;
-    }
-
-    .logout:hover {
-      background-color: #c9302c;
-    }
-
     .menu-button {
       display: none;
       position: absolute;
@@ -244,15 +106,6 @@
         display: none;
       }
 
-      .menu-container {
-        transform: translateX(-100%);
-        width: calc(100% - 40px);
-        height: calc(100vh - 40px);
-        position: fixed;
-        background-color: rgba(40, 40, 40, 0.92);
-        transition: ease .3s;
-      }
-
       .menu-button {
         display: block;
         position: fixed;
@@ -263,11 +116,6 @@
         position: absolute;
         top: 10px;
         right: 10px;
-      }
-
-      .content {
-        margin-left: 0;
-        padding: 20px;
       }
 
       .modal-content {
@@ -440,21 +288,9 @@
 </head>
 
 <body>
-  <button class="menu-button" onclick="toggleMenu()">☰</button>
-  <div class="menu-container">
-    <button class="close-button" onclick="toggleMenu()">✖</button>
-    <div>
-      <h2>Secretario</h2>
-      <ul>
-        <ul>
-          <li><a href="/deudas_secre">Deudas</a></li>
-          <li><a href="/pagos_secre">Pagos</a></li>
-          <li class="green-option">Egresos</li>
-        </ul>
-      </ul>
-    </div>
-    <div class="logout"><a href="/login">Cerrar Sesión</a></div>
-  </div>
+   <!-- Incluyendo menu desde partials -->
+   {% include 'partials/menu.html' %}
+
   <div class="content">
     <h2>Bienvenido :D</h2>
     <p>Seleccione una opción del menú.</p>

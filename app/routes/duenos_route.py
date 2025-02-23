@@ -5,13 +5,13 @@ duenos_bp = Blueprint('duenos', __name__, url_prefix='/duenos')
 
 @duenos_bp.route('/duenos')
 def contratos():
-     return render_template('duenos.html')
+     return render_template('views/duenos.html')
 
 @duenos_bp.route('/', methods=['GET'])
 def mostrar_duenos():
     """Muestra la página de gestión de dueños."""
     duenos = ver_duenos()
-    return render_template('duenos.html', duenos=duenos)
+    return render_template('views/duenos.html', duenos=duenos)
 
 @duenos_bp.route('/editar', methods=['POST'])
 def actualizar_dueno():
@@ -54,4 +54,4 @@ def descartar_nuevo_dueno():
 
 @duenos_bp.route('/duenos')
 def duenos():
-    return render_template('duenos.html') 
+    return render_template('views/duenos.html') 

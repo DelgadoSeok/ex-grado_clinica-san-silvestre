@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Menú Admin - Contratos</title>
 
-  <link rel="stylesheet" href="{{ url_for('static', filename='styles_contratos.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/styles_contratos.css') }}">
   <script>
     function toggleMenu() {
       document.body.classList.toggle('menu-open');
@@ -264,22 +264,9 @@ function anularContrato(contratoId) {
   </script>
 </head>
 <body>
-  <button class="menu-button" onclick="toggleMenu()">☰</button>
-  <div class="menu-container">
-    <button class="close-button" onclick="toggleMenu()">✖</button>
-    <div>
-      <h2>Administrador</h2>
-      <ul>
-        <li><a href="/duenos">Dueños</a></li>
-        <li><a href="/inquilinos">Inquilinos</a></li>
-        <li><a href="/puestos">Puestos</a></li>
-        <li class="green-option">Contratos</li>
-        <li><a href="/pagos">Pagos</a></li>
-        <li><a href="/egresos">Egresos</a></li>
-      </ul>
-    </div>
-    <div class="logout"><a href="/login">Cerrar Sesión</a></div>
-  </div>
+    <!-- Incluyendo menu desde partials -->
+    {% include 'partials/menu.html' %}
+    
   <div class="content">
     <h2>Bienvenido :D</h2>
     <p>Seleccione una opción del menú.</p>

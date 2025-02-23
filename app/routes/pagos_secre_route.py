@@ -11,7 +11,7 @@ pagos_secre_bp = Blueprint('pagos_secre', __name__, url_prefix='/pagos_secre')
 def mostrar_pagos():
     # Llamar al nuevo método para obtener las deudas y mostrarlas en un log
     deudas = obtener_deudas()
-    return render_template('pagos_secre.html', deudas=deudas)
+    return render_template('views/pagos_secre.html', deudas=deudas)
 
 
 # recibir datos de nueva deuda que sera aplicada a todos los puestos y registrarla en db

@@ -1,5 +1,5 @@
 # importar class
-from flask import Flask, render_template
+from flask import Flask, redirect, render_template, session, url_for
 import os
 from dotenv import load_dotenv
 
@@ -16,7 +16,6 @@ from routes.inquilinos_route import inquilinos_bp
 from routes.puestos_route import puestos_bp
 from routes.contratos_route import contratos_bp
 from routes.egresos_route import egresos_bp
-from routes.menu_admin_route import menu_admin_bp
 
 from routes.deudas_secre_route import deudas_secre_bp
 from routes.egresos_secre_route import egresos_secre_bp
@@ -36,11 +35,20 @@ app.register_blueprint(inquilinos_bp)
 app.register_blueprint(puestos_bp)
 app.register_blueprint(contratos_bp)
 app.register_blueprint(egresos_bp)
-app.register_blueprint(menu_admin_bp)
 
 app.register_blueprint(deudas_secre_bp)
 app.register_blueprint(egresos_secre_bp)
 app.register_blueprint(pagos_secre_bp)
+
+# Context processor para compartir el rol de usuario en todas las plantillas
+@app.context_processor
+def agregar_contexto_global():
+      return {
+            'usuario': session.get('usuario'),
+            'rol': session.get('rol')
+      }
+
+
 
 # comprobar si se encuentra en el archivo inicial
 if __name__ == '__main__':

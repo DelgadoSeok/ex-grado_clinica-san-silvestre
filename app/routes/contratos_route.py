@@ -7,7 +7,7 @@ contratos_bp = Blueprint('contratos', __name__)
 def contratos():
  
     contratos = ver_contratos()
-    return render_template('contratos.html', contratos=contratos)
+    return render_template('views/contratos.html', contratos=contratos)
 
 @contratos_bp.route('/contratos/registrar', methods=['POST'])
 def registrar_nuevo_contrato():

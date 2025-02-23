@@ -5,7 +5,7 @@ login_bp = Blueprint("login", __name__)
 
 @login_bp.route("/login", methods=["GET"])
 def mostrar_login():
-    return render_template("login.html")
+    return render_template("partials/login.html")
 
 @login_bp.route("/login", methods=["POST"])
 def procesar_login():
@@ -20,15 +20,12 @@ def procesar_login():
 
     if usuario_db:
         session["usuario"] = usuario_db["usuario"]
-        session["rol"] = usuario_db["rol"]  # Guardar el rol en la sesión
+        session["rol"] = usuario_db["rol"].lower()  # Guardar el rol en la sesión
 
         flash("Inicio de sesión exitoso", "success")
 
-        # Redirigir según el rol del usuario
-        if usuario_db["rol"].lower() == "admin":
-            return redirect(url_for("menu_admin.mostrar_menu"))  # Redirige a menu_admin
-        else:
-            return redirect(url_for("menu.mostrar_menu"))  # Redirige a menu normal
+        flash("Inicio de sesión exitoso", "success")
+        return redirect(url_for("menu.mostrar_menu")) 
     else:
         flash("Credenciales incorrectas", "danger")
         return redirect(url_for("login.mostrar_login"))

@@ -35,9 +35,7 @@ python -c "import flask; print(flask.__version__)"
 
 ### Librerías recomendadas:
 ```sh
-pip install mysql-connector-python python-dotenv flask Flask-SQLAlchemy
-pip install reportlab
-
+pip install flask Flask-SQLAlchemy mysql-connector-python python-dotenv reportlab 
 ```
 
 ## 3. Ejecutar el proyecto

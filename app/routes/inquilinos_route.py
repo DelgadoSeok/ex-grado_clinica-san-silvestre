@@ -3,14 +3,14 @@ from services.inquilinos_service import registrar_inquilino, obtener_inquilinos,
 
 inquilinos_bp = Blueprint('inquilinos', __name__, url_prefix='/inquilinos')
 
-@inquilinos_bp.route('/inquilinos')
+@inquilinos_bp.route('views//inquilinos')
 def contratos():
-    return render_template('inquilinos.html')
+    return render_template('views/inquilinos.html')
 
 @inquilinos_bp.route('/', methods=['GET'])
 def mostrar_inquilinos():
     inquilinos = obtener_inquilinos()
-    return render_template('inquilinos.html', inquilinos=inquilinos)
+    return render_template('views/inquilinos.html', inquilinos=inquilinos)
 
 @inquilinos_bp.route('/registrar', methods=['POST'])
 def registrar_nuevo_inquilino():
@@ -50,4 +50,4 @@ def actualizar_inquilino(id):
 
 @inquilinos_bp.route('/inquilinos')
 def inquilinos():
-    return render_template('inquilinos.html')
+    return render_template('views/inquilinos.html')

@@ -5,7 +5,7 @@ egresos_bp = Blueprint('egresos', __name__, url_prefix='/egresos')
 
 @egresos_bp.route('/egresos')
 def contratos():
-    return render_template('egresos.html')
+    return render_template('views/egresos.html')
 
 @egresos_bp.route('/', methods=['GET'])
 def mostrar_egresos():
@@ -14,7 +14,7 @@ def mostrar_egresos():
 
     egresos = ver_egresos(fecha_inicio or None, fecha_fin or None)
     #print("ver_egresos", egresos)
-    return render_template('egresos.html', egresos=egresos)
+    return render_template('views/egresos.html', egresos=egresos)
 
 @egresos_bp.route('/registrar', methods=['POST'])
 def nuevo_egreso():
