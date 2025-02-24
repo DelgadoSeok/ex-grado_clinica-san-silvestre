@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1:3306
--- Tiempo de generación: 23-02-2025 a las 22:49:53
+-- Tiempo de generación: 24-02-2025 a las 00:03:10
 -- Versión del servidor: 9.1.0
 -- Versión de PHP: 8.3.14
 
@@ -35,6 +35,7 @@ CREATE TABLE IF NOT EXISTS `asignacion_consultorio` (
   `hora_ini` time NOT NULL,
   `hora_fin` time NOT NULL,
   `consultorio_id` int NOT NULL,
+  `estado` enum('A','I') NOT NULL DEFAULT 'A',
   PRIMARY KEY (`id`),
   UNIQUE KEY `id` (`id`),
   KEY `consultorio_id` (`consultorio_id`),
@@ -45,16 +46,16 @@ CREATE TABLE IF NOT EXISTS `asignacion_consultorio` (
 -- Volcado de datos para la tabla `asignacion_consultorio`
 --
 
-INSERT INTO `asignacion_consultorio` (`id`, `doctor_id`, `dia_semana`, `hora_ini`, `hora_fin`, `consultorio_id`) VALUES
-(1, 1, 1, '08:00:00', '12:00:00', 1),
-(2, 1, 3, '08:00:00', '12:00:00', 1),
-(3, 1, 5, '08:00:00', '12:00:00', 1),
-(4, 2, 1, '08:00:00', '12:00:00', 2),
-(5, 2, 2, '14:00:00', '18:00:00', 2),
-(6, 2, 4, '08:00:00', '12:00:00', 2),
-(7, 3, 2, '08:00:00', '12:00:00', 3),
-(8, 3, 2, '14:00:00', '18:00:00', 1),
-(9, 3, 4, '08:00:00', '18:00:00', 3);
+INSERT INTO `asignacion_consultorio` (`id`, `doctor_id`, `dia_semana`, `hora_ini`, `hora_fin`, `consultorio_id`, `estado`) VALUES
+(1, 1, 1, '08:00:00', '12:00:00', 1, 'A'),
+(2, 1, 3, '08:00:00', '12:00:00', 1, 'A'),
+(3, 1, 5, '08:00:00', '12:00:00', 1, 'A'),
+(4, 2, 1, '08:00:00', '12:00:00', 2, 'A'),
+(5, 2, 2, '14:00:00', '18:00:00', 2, 'A'),
+(6, 2, 4, '08:00:00', '12:00:00', 2, 'A'),
+(7, 3, 2, '08:00:00', '12:00:00', 3, 'A'),
+(8, 3, 2, '14:00:00', '18:00:00', 1, 'A'),
+(9, 3, 4, '08:00:00', '18:00:00', 3, 'A');
 
 -- --------------------------------------------------------
 
@@ -164,8 +165,6 @@ DROP TABLE IF EXISTS `doctor`;
 CREATE TABLE IF NOT EXISTS `doctor` (
   `id` int NOT NULL,
   `matricula_profesional` varchar(100) NOT NULL,
-  `fecha_contratacion` date NOT NULL,
-  `fecha_retiro` date DEFAULT NULL,
   `estado` enum('A','I') CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL DEFAULT 'A',
   PRIMARY KEY (`id`),
   UNIQUE KEY `id` (`id`)
@@ -175,10 +174,10 @@ CREATE TABLE IF NOT EXISTS `doctor` (
 -- Volcado de datos para la tabla `doctor`
 --
 
-INSERT INTO `doctor` (`id`, `matricula_profesional`, `fecha_contratacion`, `fecha_retiro`, `estado`) VALUES
-(1, '12345678', '2025-02-01', NULL, 'A'),
-(2, '98754651', '2025-01-01', NULL, 'A'),
-(3, '845456465465', '2025-01-09', '2025-02-23', 'I');
+INSERT INTO `doctor` (`id`, `matricula_profesional`, `estado`) VALUES
+(1, '12345678', 'A'),
+(2, '98754651', 'A'),
+(3, '845456465465', 'I');
 
 -- --------------------------------------------------------
 
@@ -205,6 +204,33 @@ INSERT INTO `doctor_especialidad` (`doctor_id`, `especialidad_id`) VALUES
 (3, 1),
 (3, 4),
 (3, 5);
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `doctor_historial`
+--
+
+DROP TABLE IF EXISTS `doctor_historial`;
+CREATE TABLE IF NOT EXISTS `doctor_historial` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `doctor_id` int NOT NULL,
+  `fecha_registro` date NOT NULL,
+  `evento` enum('I','R') NOT NULL DEFAULT 'I',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `id` (`id`),
+  KEY `doctor_id` (`doctor_id`)
+) ENGINE=MyISAM AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Volcado de datos para la tabla `doctor_historial`
+--
+
+INSERT INTO `doctor_historial` (`id`, `doctor_id`, `fecha_registro`, `evento`) VALUES
+(1, 1, '2025-02-01', 'I'),
+(2, 2, '2025-01-01', 'I'),
+(3, 3, '2025-01-09', 'I'),
+(4, 3, '2025-02-23', 'R');
 
 -- --------------------------------------------------------
 
