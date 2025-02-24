@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1:3306
--- Tiempo de generación: 24-02-2025 a las 00:03:10
+-- Tiempo de generación: 24-02-2025 a las 02:08:59
 -- Versión del servidor: 9.1.0
 -- Versión de PHP: 8.3.14
 
@@ -18,7 +18,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Base de datos: `clinica`
+-- Base de datos: `clinica_san_silvestre`
 --
 
 -- --------------------------------------------------------
@@ -165,7 +165,7 @@ DROP TABLE IF EXISTS `doctor`;
 CREATE TABLE IF NOT EXISTS `doctor` (
   `id` int NOT NULL,
   `matricula_profesional` varchar(100) NOT NULL,
-  `estado` enum('A','I') CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL DEFAULT 'A',
+  `estado` enum('A','I') NOT NULL DEFAULT 'A',
   PRIMARY KEY (`id`),
   UNIQUE KEY `id` (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
@@ -293,7 +293,6 @@ CREATE TABLE IF NOT EXISTS `historia_clinica` (
   `id` int NOT NULL AUTO_INCREMENT,
   `nro_carpeta_fisica` int NOT NULL,
   `fecha_registro` date NOT NULL,
-  `antecedentes` mediumtext CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
   `paciente_id` int NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `id` (`id`),
@@ -304,10 +303,10 @@ CREATE TABLE IF NOT EXISTS `historia_clinica` (
 -- Volcado de datos para la tabla `historia_clinica`
 --
 
-INSERT INTO `historia_clinica` (`id`, `nro_carpeta_fisica`, `fecha_registro`, `antecedentes`, `paciente_id`) VALUES
-(1, 97, '2025-02-23', 'Antecedentes médicos del paciente con ID 4', 4),
-(2, 43, '2025-02-23', 'Antecedentes médicos del paciente con ID 5', 5),
-(3, 7, '2025-02-23', 'Antecedentes médicos del paciente con ID 6', 6);
+INSERT INTO `historia_clinica` (`id`, `nro_carpeta_fisica`, `fecha_registro`, `paciente_id`) VALUES
+(1, 97, '2025-02-23', 4),
+(2, 43, '2025-02-23', 5),
+(3, 7, '2025-02-23', 6);
 
 -- --------------------------------------------------------
 
@@ -376,7 +375,7 @@ CREATE TABLE IF NOT EXISTS `telefono` (
   `id` int NOT NULL AUTO_INCREMENT,
   `persona_id` int NOT NULL,
   `nro_telefono` varchar(100) NOT NULL,
-  `estado` enum('A','I') CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL DEFAULT 'A',
+  `estado` enum('A','I') NOT NULL DEFAULT 'A',
   PRIMARY KEY (`id`),
   UNIQUE KEY `id` (`id`),
   KEY `persona_id` (`persona_id`)
