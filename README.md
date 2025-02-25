@@ -57,3 +57,9 @@ python app/app.py
 
 ## 5. Recomendaciones
 - Usar un entorno virtual para instalar las librerías necesarias y evitar conflictos de dependencias.
+
+
+## 6. Peewee ORM
+```sh
+pip install peewee
+```
