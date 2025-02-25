@@ -6,6 +6,6 @@ def get_db_connection():
         host="localhost",
         user="root",
         password="",
-        database="mutualista"
+        database="clinica_san_silvestre",
     )
 
