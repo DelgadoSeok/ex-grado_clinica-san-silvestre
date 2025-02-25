@@ -141,8 +141,18 @@
         transition: ease .3s;
     }
 }
+.menu-container ul li.active {
+    background-color: #50c8c6;
+}
 
+.menu-container ul li.active a {
+    color: #282828; 
+    font-weight: bold; 
+}
 
+.menu-container ul li.active a:hover  {
+    color: #5a04f9;
+}
 
 /* estilo menu antiguo 
 <style>

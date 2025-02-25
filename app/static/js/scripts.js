@@ -1,20 +1,3 @@
-//aqui incluir login
-
-
-//menu 
-function toggleMenu() {
-    var menu = document.querySelector('.menu-container');
-    menu.style.display = (menu.style.display === 'block') ? 'none' : 'block';
-}
-/*
-function toggleMenu() {
-    document.body.classList.toggle('menu-open');
-}*/
-
-// Función para abrir y cerrar el menú
-function toggleMenu() {
-    document.body.classList.toggle('menu-open');
-}
 
 // Funciones para abrir y cerrar el modal
 function openModal() {

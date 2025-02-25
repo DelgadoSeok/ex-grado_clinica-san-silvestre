@@ -7,6 +7,7 @@
     <title>Menú {{ user_role }}</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/menu.css') }}">
+    <script src="{{ url_for('static', filename='js/menu.js') }}"></script>
     <script src="{{ url_for('static', filename='js/script.js') }}"></script>
 </head>
 
@@ -37,12 +38,12 @@
                 {% elif rol == 'secretaria' %}
                 <!-- <h2>Secretario</h2> con la linea 23 nios evitamos colocar la lina 25 y 38 -->
                 <!-- Opciones para el secretario -->
-                <li><a href="/doctores">Doctores</a></li>
-                <li><a href="/pacientes">Pacientes</a></li>
-                <li><a href="/consultorios">Consultorios</a></li>
-                <li><a href="/consultas">Consulta</a></li>
-                <li><a href="/reportes">Reportes</a></li>
-                <li><a href="/duenos">Dueños</a></li>
+                <li><a href="/doctores" id="doctores-link">Doctores</a></li>
+                <li><a href="/pacientes" id="pacientes-link">Pacientes</a></li>
+                <li><a href="/consultorios" id="consultorios-link">Consultorios</a></li>
+                <li><a href="/consultas" id="consultas-link">Consulta</a></li>
+                <li><a href="/reportes" id="reportes-link">Reportes</a></li>
+                <li><a href="/duenos" id="duenos-link">Dueños</a></li>
 
                 {% else %}
                 <!-- Si no es admin ni secretario, se muestra algo genérico -->
