@@ -1,0 +1,30 @@
+<!-- Modal General -->
+<div id="modal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeModal()">&times;</span>
+        <h4>{{ title }}</h4>
+        <form id="formModal" method="post" action="{{ action_url }}">
+            <!-- Campos generados dinámicamente -->
+            {% for field in form_fields %}
+                <div class="form-group">
+                    <label for="{{ field.name }}">{{ field.label }}:</label>
+                    {% if field.type == 'text' %}
+                        <input type="text" id="{{ field.name }}" name="{{ field.name }}" value="{{ field.value }}" required>
+                    {% elif field.type == 'number' %}
+                        <input type="number" id="{{ field.name }}" name="{{ field.name }}" value="{{ field.value }}" step="0.01" required>
+                    {% elif field.type == 'date' %}
+                        <input type="date" id="{{ field.name }}" name="{{ field.name }}" value="{{ field.value }}" required>
+                    {% elif field.type == 'select' %}
+                        <select id="{{ field.name }}" name="{{ field.name }}" required>
+                            <option value="">Seleccione {{ field.label }}</option>
+                            {% for option in field.options %}
+                                <option value="{{ option.value }}" {% if option.value == field.value %}selected{% endif %}>{{ option.label }}</option>
+                            {% endfor %}
+                        </select>
+                    {% endif %}
+                </div>
+            {% endfor %}
+            <button type="submit">Guardar</button>
+        </form>
+    </div>
+</div>

@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestión de Consultas</title>
+    <script src="{{ url_for('static', filename='js/consultas.js') }}"></script>
+</head>
+
+<body>
+    <!-- Incluyendo menu desde shared -->
+    {% include 'shared/menu.html' %}
+
+    <div class="content">
+        <h2>Gestión de Consultas</h2>
+        <!-- Botón para abrir el modal y agregar una nueva deuda -->
+        <div class="section-header">
+            <h3>Listado de Consultas</h3>
+            <button onclick="openModal()">Agregar Consulta</button>
+        </div>
+        <div class="section">
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Fecha</th>
+                        <th>Monto</th>
+                        <th>Puesto</th>
+                        <th>Estado</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Ejemplo de fila; en producción se cargarán los datos dinámicamente -->
+                    <tr>
+                        <td>1</td>
+                        <td>2025-02-20</td>
+                        <td>$150.00</td>
+                        <td>Puesto 5</td>
+                        <td>Activo</td>
+                        <td>
+                            <button>Editar</button>
+                            <button>Eliminar</button>
+                        </td>
+                    </tr>
+                    <!-- Más filas -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Modal para Agregar/Editar Deuda -->
+    <div id="modal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <h4>Agregar Deuda</h4>
+            <form id="deudaForm">
+                <label for="fecha">Fecha:</label>
+                <input type="date" id="fecha" name="fecha" required>
+
+                <label for="monto">Monto:</label>
+                <input type="number" id="monto" name="monto" step="0.01" required>
+
+                <label for="puesto">Puesto:</label>
+                <select id="puesto" name="puesto" required>
+                    <option value="">Seleccione Puesto</option>
+                    <!-- Las opciones deben ser cargadas dinámicamente desde la tabla `puesto` -->
+                    <option value="1">Puesto 1</option>
+                    <option value="2">Puesto 2</option>
+                    <!-- ... -->
+                </select>
+
+                <label for="estado">Estado de Deuda:</label>
+                <select id="estado" name="estado" required>
+                    <option value="">Seleccione Estado</option>
+                    <!-- Las opciones deben reflejar los estados disponibles en la tabla `deuda_estado` -->
+                    <option value="1">Activo</option>
+                    <option value="2">Pendiente</option>
+                    <option value="3">Cancelado</option>
+                </select>
+
+                <button type="submit">Guardar</button>
+            </form>
+        </div>
+    </div>
+
+</body>
+
+</html>
