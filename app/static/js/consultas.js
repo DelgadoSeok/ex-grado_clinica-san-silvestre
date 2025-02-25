@@ -171,3 +171,8 @@ function crearConsulta() {
       })
       .catch(error => console.error('Error:', error));
 }
+
+function generarPDF(consultaId) {
+  // Redirigir a la ruta que genera el PDF
+  window.open(`/consultas/reporte/${consultaId}`, '_blank');
+}

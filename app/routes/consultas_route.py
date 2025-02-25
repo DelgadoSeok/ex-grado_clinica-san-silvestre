@@ -1,7 +1,12 @@
-from flask import Blueprint, render_template, request, jsonify
+import os
+from flask import Blueprint, current_app, render_template, request, jsonify
 from datetime import datetime
 from services.consultas_service import obtener_consultas, crear_consulta, obtener_horarios_disponibles, obtener_pacientes, obtener_doctores, obtener_consultorios, verificar_disponibilidad, obtener_consulta_por_id
 from reportlab.lib.pagesizes import letter
+from reportlab.lib import colors
+from reportlab.lib.styles import getSampleStyleSheet
+from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, Spacer, Image
+from reportlab.lib.units import inch
 from flask import Blueprint, send_file
 import io
 from reportlab.pdfgen import canvas
@@ -65,24 +70,66 @@ def descargar_reporte(consulta_id):
 
     # Crear el PDF en memoria
     buffer = io.BytesIO()
-    pdf = canvas.Canvas(buffer, pagesize=letter)
-    pdf.setTitle("Reporte de Consulta")
+    pdf = SimpleDocTemplate(buffer, pagesize=letter, leftMargin=0.5*inch, rightMargin=0.5*inch)
+    styles = getSampleStyleSheet()
 
-    # Título
-    pdf.setFont("Helvetica-Bold", 16)
-    pdf.drawString(200, 750, "Reporte de Consulta")
+    # Contenido del PDF
+    contenido = []
 
-    # Detalles de la consulta
-    pdf.setFont("Helvetica", 12)
-    pdf.drawString(50, 700, f"Paciente: {consulta['paciente_nombre']}")
-    pdf.drawString(50, 680, f"Doctor: {consulta['doctor_nombre']}")
-    pdf.drawString(50, 660, f"Consultorio: {consulta['consultorio_nro']}")
-    pdf.drawString(50, 640, f"Fecha: {consulta['fecha']}")
-    pdf.drawString(50, 620, f"Hora Inicio: {consulta['hora_ini']}")
-    pdf.drawString(50, 600, f"Hora Fin: {consulta['hora_fin']}")
-    pdf.drawString(50, 580, f"Tipo: {consulta['tipo']}")
+    # Encabezado con el logo de la clínica
+    logo_path = os.path.join(current_app.root_path, 'static', 'img', 'logo_clinica.jpg')
+    logo = Image(logo_path, width=2*inch, height=1*inch)
+    contenido.append(logo)
+    contenido.append(Spacer(1, 0.25*inch))  # Espacio después del logo
 
-    pdf.save()
+    # Título del reporte
+    titulo = Paragraph("Reporte de Consulta Médica", styles['Title'])
+    contenido.append(titulo)
+    contenido.append(Spacer(1, 0.25*inch))  # Espacio después del título
+
+    # Datos de la consulta en formato de tabla
+    datos = [
+        ["Campo", "Valor"],
+        ["Paciente", consulta['paciente_nombre']],
+        ["Doctor", consulta['doctor_nombre']],
+        ["Consultorio", consulta['nro_consultorio']],
+        ["Fecha", consulta['fecha']],
+        ["Hora Inicio", consulta['hora_ini']],
+        ["Hora Fin", consulta['hora_fin']],
+        ["Tipo", consulta['tipo']]
+    ]
+
+    # Crear la tabla
+    tabla = Table(datos, colWidths=[1.5*inch, 4*inch])
+    tabla.setStyle(TableStyle([
+        ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor("#004080")),  # Fondo azul oscuro para el encabezado
+        ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),  # Texto blanco para el encabezado
+        ('ALIGN', (0, 0), (-1, -1), 'CENTER'),  # Alinear todo al centro
+        ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),  # Fuente en negrita para el encabezado
+        ('FONTSIZE', (0, 0), (-1, 0), 12),  # Tamaño de fuente para el encabezado
+        ('BOTTOMPADDING', (0, 0), (-1, 0), 12),  # Espaciado inferior para el encabezado
+        ('BACKGROUND', (0, 1), (-1, -1), colors.HexColor("#F0F0F0")),  # Fondo gris claro para las filas de datos
+        ('TEXTCOLOR', (0, 1), (-1, -1), colors.black),  # Texto negro para las filas de datos
+        ('GRID', (0, 0), (-1, -1), 1, colors.HexColor("#C0C0C0")),  # Líneas de la tabla en gris
+        ('FONTNAME', (0, 1), (-1, -1), 'Helvetica'),  # Fuente normal para las filas de datos
+        ('FONTSIZE', (0, 1), (-1, -1), 10),  # Tamaño de fuente para las filas de datos
+    ]))
+    contenido.append(tabla)
+    contenido.append(Spacer(1, 0.5*inch))  # Espacio después de la tabla
+
+    # Pie de página con información de contacto
+    pie_pagina = Paragraph(
+        "Clínica San Silvestre<br/>"
+        "Dirección: Av. Principal 123, Ciudad<br/>"
+        "Teléfono: +123 456 7890<br/>"
+        "Email: info@clinicasansilvestre.com",
+        styles['Normal']
+    )
+    contenido.append(pie_pagina)
+
+    # Construir el PDF
+    pdf.build(contenido)
+
+    # Preparar el archivo para descargar
     buffer.seek(0)
-
     return send_file(buffer, as_attachment=True, mimetype='application/pdf', download_name=f"Reporte_Consulta_{consulta_id}.pdf")

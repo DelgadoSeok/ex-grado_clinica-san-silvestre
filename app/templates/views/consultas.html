@@ -90,7 +90,9 @@
             <td>{{ consulta.hora_fin }}</td>
             <td>{{ consulta.tipo }}</td>
             <td>{{ consulta.estado }}</td>
-            <td>{{ consulta[9] }}</td>
+            <td>
+              <button  class="btn btn-edit" onclick="generarPDF('{{ consulta.id }}')">Generar PDF</button>
+            </td>
           </tr>
           {% endfor %}
         </tbody>
