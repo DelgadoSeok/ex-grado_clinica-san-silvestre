@@ -21,6 +21,9 @@ from routes.deudas_secre_route import deudas_secre_bp
 from routes.egresos_secre_route import egresos_secre_bp
 from routes.pagos_secre_route import pagos_secre_bp
 
+# para clinica
+from routes.consultas_route import consultas_bp
+
 from routes.doctor_route import doctor_bp
 
 # inicializar aplicacion
@@ -41,6 +44,10 @@ app.register_blueprint(egresos_bp)
 app.register_blueprint(deudas_secre_bp)
 app.register_blueprint(egresos_secre_bp)
 app.register_blueprint(pagos_secre_bp)
+
+# para clinica
+app.register_blueprint(consultas_bp)
+
 
 app.register_blueprint(doctor_bp)
 

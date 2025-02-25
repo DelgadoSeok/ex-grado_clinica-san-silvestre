@@ -5,8 +5,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Menú {{ user_role }}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/menu.css') }}">
-    <link rel="stylesheet" href="menu.css">
     <script src="{{ url_for('static', filename='js/script.js') }}"></script>
 </head>
 
@@ -18,7 +18,7 @@
     <div class="menu-container">
 
         <!-- Botón para cerrar el menú -->
-        <button class="close-button" onclick="toggleMenu()">✖</button>
+        <button class="menu-close-button" onclick="toggleMenu()">✖</button>
         <div>
             <h2>{{ rol.capitalize() }}</h2> <!-- Mostrar el rol de forma capitalizada -->
             <ul>
@@ -27,19 +27,23 @@
                    de cada uno -->
 
                 <!-- Opciones para el admin -->
-                <li><a href="/duenos">Dueños</a></li>
+                <!-- <li><a href="/duenos">Dueños</a></li>
                 <li><a href="/inquilinos">Inquilinos</a></li>
                 <li><a href="/puestos">Puestos</a></li>
                 <li><a href="/contratos">Contratos</a></li>
                 <li><a href="/pagos">Pagos</a></li>
-                <li><a href="/egresos">Egresos</a></li>
+                <li><a href="/egresos">Egresos</a></li> -->
 
                 {% elif rol == 'secretaria' %}
                 <!-- <h2>Secretario</h2> con la linea 23 nios evitamos colocar la lina 25 y 38 -->
                 <!-- Opciones para el secretario -->
-                <li><a href="/deudas_secre">Deudas</a></li>
-                <li><a href="/pagos_secre">Pagos</a></li>
-                <li><a href="/egresos_secre">Egresos</a></li>
+                <li><a href="/doctores">Doctores</a></li>
+                <li><a href="/pacientes">Pacientes</a></li>
+                <li><a href="/consultorios">Consultorios</a></li>
+                <li><a href="/consulta">Consulta</a></li>
+                <li><a href="/reporte">Reportes</a></li>
+                <li><a href="/duenos">Dueños</a></li>
+
                 {% else %}
                 <!-- Si no es admin ni secretario, se muestra algo genérico -->
                 <li><a href="#">Sin opciones disponibles</a></li>
@@ -47,13 +51,13 @@
             </ul>
         </div>
 
-        <div class="logout"><a href="/login">Cerrar Sesión</a></div>
+        <div class="menu-logout"><a href="/login">Cerrar Sesión</a></div>
     </div>
 
     <!-- Mostrar el contenido solo si la ruta es /menu -->
     {% if request.path == '/menu' %}
-    <div class="content">
-        <h2>Bienvenido, {{ usuario }}</h2> <!-- Mostrar nombre de usuario -->
+    <div class="menu-content">
+        <h2>Bienvenida, {{ usuario }}</h2> <!-- Mostrar nombre de usuario -->
         <p>Seleccione una opción del menú.</p>
     </div>
     {% endif %}

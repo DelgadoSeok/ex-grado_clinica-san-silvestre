@@ -1,0 +1,32 @@
+<!-- templates/shared/tabla.html -->
+<table>
+    <thead>
+        <tr>
+            {% for encabezado in encabezados %}
+                <th>{{ encabezado }}</th>
+            {% endfor %}
+        </tr>
+    </thead>
+    <tbody>
+        {% if filas %}
+            {% for fila in filas %}
+                <tr>
+                    {% for columna in fila %}
+                        <td>{{ columna }}</td>
+                    {% endfor %}
+                    {% if acciones %}
+                        <td>
+                            {% for accion in acciones %}
+                                <button onclick="accion.funcion('{{ accion.parametros }}')">{{ accion.texto }}</button>
+                            {% endfor %}
+                        </td>
+                    {% endif %}
+                </tr>
+            {% endfor %}
+        {% else %}
+            <tr>
+                <td colspan="{{ encabezados|length }}" style="text-align: center;">No hay datos disponibles.</td>
+            </tr>
+        {% endif %}
+    </tbody>
+</table>
