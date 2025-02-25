@@ -13,9 +13,9 @@ def mostrar_menu():
     # Aquí pasamos el rol a la plantilla, para que el menú se construya dinámicamente
     # Tomar en cuenta que es mejor colocar el nombre completo al rol, para evitar volver a escribir y que directamente me muestre el rol como nombre
     if rol == "admin":
-        return render_template("partials/menu.html", rol="admin")  # Si es admin, pasamos 'admin' a la plantilla
-    elif rol == "secretario":
-        return render_template("partials/menu.html", rol="secretario")  # Si es secretario, pasamos 'secretario'
+        return render_template("shared/menu.html", rol="admin")  # Si es admin, pasamos 'admin' a la plantilla
+    elif rol == "secretaria":
+        return render_template("shared/menu.html", rol="secretaria")  # Si es secretario, pasamos 'secretario'
     else:
-        flash("Acceso denegado: No tienes permisos de administrador o secretario", "danger")
+        flash("Acceso denegado: No tienes permisos de administrador o secretaria", "danger")
         return redirect(url_for("login.mostrar_login"))
