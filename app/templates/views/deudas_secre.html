@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -12,9 +13,10 @@
         }
     </script>
 </head>
+
 <body>
-    <!-- Incluyendo menu desde partials -->
-    {% include 'partials/menu.html' %}
+    <!-- Incluyendo menu desde shared -->
+    {% include 'shared/menu.html' %}
 
     <div class="content">
         <h2>Gestión de Deudas</h2>
@@ -99,11 +101,12 @@
         }
 
         // Manejo del envío del formulario de deuda
-        document.getElementById('deudaForm').addEventListener('submit', function(event) {
+        document.getElementById('deudaForm').addEventListener('submit', function (event) {
             event.preventDefault();
             // Aquí se procesarían los datos ingresados y se enviaría la información al servidor
             closeModal();
         });
     </script>
 </body>
+
 </html>
