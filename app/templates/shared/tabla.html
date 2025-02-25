@@ -11,16 +11,16 @@
         {% if filas %}
             {% for fila in filas %}
                 <tr>
-                    {% for columna in fila %}
+                    {% for columna in fila[:-1] %}
                         <td>{{ columna }}</td>
                     {% endfor %}
-                    {% if acciones %}
-                        <td>
-                            {% for accion in acciones %}
-                                <button onclick="accion.funcion('{{ accion.parametros }}')">{{ accion.texto }}</button>
+                    <td>
+                        {% if fila[-1] %}  <!-- Verifica si hay acciones -->
+                            {% for accion in fila[-1] %}
+                                <button class="btn btn-{{ accion.clase }}" onclick="{{ accion.funcion }}('{{ accion.parametros }}')">{{ accion.texto }}</button>
                             {% endfor %}
-                        </td>
-                    {% endif %}
+                        {% endif %}
+                    </td>
                 </tr>
             {% endfor %}
         {% else %}
@@ -30,3 +30,4 @@
         {% endif %}
     </tbody>
 </table>
+ 

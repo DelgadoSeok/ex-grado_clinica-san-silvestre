@@ -5,7 +5,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Gestión de Consultas</title>
-  <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/scripts.js') }}"></script>
   <script src="{{ url_for('static', filename='js/consultas.js') }}"></script>
 </head>
 
@@ -63,41 +63,18 @@
       </div>
 
       <!-- Tabla para mostrar los consultas -->
-      <table>
-        <thead>
-          <tr>
-            <th>ID</th>
-            <th>Paciente</th>
-            <th>Doctor</th>
-            <th>Consultorio</th>
-            <th>Fecha</th>
-            <th>Hora Inicio</th>
-            <th>Hora Fin</th>
-            <th>Tipo</th>
-            <th>Estado</th>
-            <th>Acciones</th>
-          </tr>
-        </thead>
-        <tbody>
-          {% for consulta in consultas %}
-          <tr>
-            <td>{{ consulta.id }}</td>
-            <td>{{ consulta.paciente_nombre }}</td>
-            <td>{{ consulta.doctor_nombre }}</td>
-            <td>{{ consulta.nro_consultorio }}</td>
-            <td>{{ consulta.fecha }}</td>
-            <td>{{ consulta.hora_ini }}</td>
-            <td>{{ consulta.hora_fin }}</td>
-            <td>{{ consulta.tipo }}</td>
-            <td>{{ consulta.estado }}</td>
-            <td>
-              <button  class="btn btn-edit" onclick="generarPDF('{{ consulta.id }}')">Generar PDF</button>
-            </td>
-          </tr>
-          {% endfor %}
-        </tbody>
-      </table>
+      {% set encabezados = ['ID', 'Paciente', 'Doctor', 'Consultorio', 'Fecha', 'Hora Inicio', 'Hora Fin', 'Tipo', 'Estado', 'Acciones'] %}
+      {% set filas = [] %}
+      {% for consulta in consultas %}
+        {% set fila = [consulta.id, consulta.paciente_nombre, consulta.doctor_nombre, consulta.nro_consultorio, consulta.fecha, consulta.hora_ini, consulta.hora_fin, consulta.tipo, consulta.estado] %}
+        {% set acciones = [{'texto': 'Generar PDF', 'clase': 'edit', 'funcion': 'generarPDF', 'parametros': consulta.id}] %}
+        {% set fila = fila + [acciones] %}
+        {% set filas = filas.append(fila) %}
+      {% endfor %}
+      {% include 'shared/tabla.html' %}
+
     </div>
+
   </div>
 </body>
 
