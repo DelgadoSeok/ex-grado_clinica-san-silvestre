@@ -1,6 +1,6 @@
-from flask import Blueprint, render_template, request, jsonify
-from services.doctor_service import ver_doctores, registrar_persona, registrar_doctor, registrar_historial_doctor, registrar_telefono
 from datetime import datetime
+from flask import Blueprint, render_template, request, jsonify
+from services.doctor_service import *
 
 doctor_bp = Blueprint('doctor', __name__, url_prefix='/doctor')
 
@@ -11,7 +11,9 @@ doctor_bp = Blueprint('doctor', __name__, url_prefix='/doctor')
 @doctor_bp.route('/', methods=['GET'])
 def doctor():
     doctores = ver_doctores()
-    return render_template('views/doctor.html', doctores=doctores)
+    especialidades = ver_especialidades()
+
+    return render_template('views/doctor.html', doctores=doctores, especialidades=especialidades)
 
 @doctor_bp.route('/registrar', methods=['POST'])
 def registrar_nuevo_doctor():
@@ -25,6 +27,13 @@ def registrar_nuevo_doctor():
     telefonos = data.get('telefonos', [])
     for telefono in telefonos:
         registrar_telefono(resultado['persona_id'], telefono)
+
+    # registrar especialidad/es de doctor
+    especialidades = data.get('especialidades', [])
+        # si no hay ninguna especialidad, el bucle no se ejecutará, por lo que no registrará nada
+    for especialidad in especialidades:
+        registrar_doctor_especialidad(resultado['persona_id'], especialidad)
+
 
     return jsonify(resultado)
 

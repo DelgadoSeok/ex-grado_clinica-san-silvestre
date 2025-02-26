@@ -20,7 +20,25 @@ function agregarTelefono() {
     nuevoTelefono.type = 'text';
     nuevoTelefono.name = 'telefono';
     telefonosContainer.appendChild(nuevoTelefono);
+}
+
+// Función para agregar un nuevo select de especialidad
+function agregarEspecialidad() {
+  const especialidadesContainer = document.getElementById('especialidadesContainer');
+  const nuevoSelect = document.createElement('select');
+  nuevoSelect.name = 'especialidad';
+
+  // Copiar las opciones del primer select
+  const opciones = document.querySelector("[name='especialidad']").options;
+  for (let i = 0; i < opciones.length; i++) {
+    const opcion = document.createElement('option');
+    opcion.value = opciones[i].value;
+    opcion.text = opciones[i].text;
+    nuevoSelect.appendChild(opcion);
   }
+
+  especialidadesContainer.appendChild(nuevoSelect);
+}
 
 // registra nuevo doctor en db
 function registrarDoctor() {
@@ -41,12 +59,17 @@ function registrarDoctor() {
     nuevoDoctorForm.querySelectorAll("[name='telefono']").forEach(input => {
         telefonos.push(input.value);
     });
+    // Obtener todas las especialidades seleccionadas
+    let especialidades = [];
+    nuevoDoctorForm.querySelectorAll("[name='especialidad']").forEach(select => {
+      especialidades.push(select.value);
+    });
 
   
     fetch('/doctor/registrar', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ nombres, pApellido, sApellido, fechaNacimiento, sexo, ci, email, direccion, matricula, telefonos })
+      body: JSON.stringify({ nombres, pApellido, sApellido, fechaNacimiento, sexo, ci, email, direccion, matricula, telefonos, especialidades })
     })
       .then(response => response.json())
       .then(data => {

@@ -70,6 +70,15 @@
             <button type="button" onclick="agregarTelefono()">Agregar Teléfono</button>
 
             <!-- TODO: agregar especialidades -->
+            <div id="especialidadesContainer">
+              <label for="especialidad">Especialidades:</label>
+              <select name="especialidad">
+                {% for especialidad in especialidades %}
+                <option value="{{ especialidad.id }}">{{ especialidad.descripcion }}</option>
+                {% endfor %}
+              </select>
+            </div>
+            <button type="button" onclick="agregarEspecialidad()">Agregar Especialidad</button>
 
             <!-- <label for="monto">Monto:</label>
             <input type="number" id="monto" name="monto" step="0.01" required> -->
@@ -122,8 +131,8 @@
             <th>sexo</th>
             <th>CI</th>
             <th>Matricula Profesional</th>
-            <th>Acciones</th>
             <th>Estado</th>
+            <th>Acciones</th>
           </tr>
         </thead>
         <tbody>
