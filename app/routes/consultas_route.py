@@ -1,7 +1,7 @@
 import os
 from flask import Blueprint, current_app, render_template, request, jsonify
 from datetime import datetime
-from services.consultas_service import obtener_consultas, crear_consulta, obtener_horarios_disponibles, obtener_pacientes, obtener_doctores, obtener_consultorios, verificar_disponibilidad, obtener_consulta_por_id
+from services.consultas_service import obtener_consultas, crear_consulta, obtener_horas_inicio_consultas, obtener_pacientes, obtener_doctores, obtener_consultorios, obtener_consulta_por_id
 from reportlab.lib.pagesizes import letter
 from reportlab.lib import colors
 from reportlab.lib.styles import getSampleStyleSheet
@@ -25,26 +25,18 @@ def mostrar_consultas():
 def nueva_consulta():
     pacientes = obtener_pacientes()
     doctores = obtener_doctores()
-    return render_template('views/nueva_consulta.html', pacientes=pacientes, doctores=doctores)
+    consultorios = obtener_consultorios()
+    return jsonify({"pacientes": pacientes, "doctores": doctores, "consultorios": consultorios})
 
+@consultas_bp.route('/hora_ini', methods=['GET'])
+def hora_ini():
+    fecha = request.args.get('fecha')  # Obtener la fecha desde la URL
+    if fecha:
+        hora_ini = obtener_horas_inicio_consultas(fecha)  # Obtener las horas disponibles para esa fecha
+    else:
+        hora_ini = []  # Si no se pasa la fecha, se devuelven horas vacías
 
-@consultas_bp.route('/obtener_consultorios/<int:doctor_id>', methods=['GET'])
-def obtener_consultorios_route(doctor_id):
-    consultorios = obtener_consultorios(doctor_id)
-    return jsonify(consultorios)
-
-consultas_bp.route('/obtener_horarios_disponibles', methods=['POST'])
-def obtener_horarios_disponibles_route():
-    data = request.json
-    consultorio_id = data.get('consultorio_id')
-    fecha = data.get('fecha')
-
-    if not (consultorio_id and fecha):
-        return jsonify({"success": False, "error": "Datos incompletos"}), 400
-
-    horarios_disponibles = obtener_horarios_disponibles(consultorio_id, fecha)
-    return jsonify({"success": True, "horarios_disponibles": horarios_disponibles})
-
+    return jsonify({'hora_ini': hora_ini})
 
 @consultas_bp.route('/crear_consulta', methods=['POST'])
 def crear_consulta_route():

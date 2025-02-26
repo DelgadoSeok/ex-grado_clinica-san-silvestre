@@ -21,7 +21,6 @@ def obtener_consultas():
         consultas = cursor.fetchall()
         cursor.close()
         db.close()
-        print(consultas)
         return consultas
     except Exception as e:
         print(f"Error al obtener consultas: {str(e)}")
@@ -34,9 +33,9 @@ def obtener_pacientes():
         db = get_db_connection()
         cursor = db.cursor(dictionary=True)
         cursor.execute("""
-            SELECT id, CONCAT(nombres, ' ', p_apellido, ' ', s_apellido) AS nombre_completo
-            FROM persona
-            WHERE estado = 'A'
+            SELECT p.id, CONCAT(p.nombres, ' ', p.p_apellido, ' ', p.s_apellido) AS nombre_completo
+            FROM persona p
+            INNER JOIN paciente pa ON pa.id = p.id  # Nos aseguramos de que exista un registro en la tabla paciente
         """)
         pacientes = cursor.fetchall()
         cursor.close()
@@ -53,9 +52,10 @@ def obtener_doctores():
         db = get_db_connection()
         cursor = db.cursor(dictionary=True)
         cursor.execute("""
-            SELECT id, CONCAT(nombres, ' ', p_apellido, ' ', s_apellido) AS nombre_completo
-            FROM persona
-            WHERE estado = 'A'
+            SELECT p.id, CONCAT(p.nombres, ' ', p.p_apellido, ' ', p.s_apellido) AS nombre_completo
+            FROM persona p
+            INNER JOIN doctor d ON d.id = p.id
+            WHERE d.estado = 'A'
         """)
         doctores = cursor.fetchall()
         cursor.close()
@@ -66,13 +66,18 @@ def obtener_doctores():
         return []
 
 
-def obtener_consultorios(doctor_id):
-    """Obtiene la lista de consultorios disponibles para un doctor"""
+def obtener_consultorios():
+    """Obtiene la lista de todos los consultorios disponibles"""
     try:
         db = get_db_connection()
         cursor = db.cursor(dictionary=True)
-        cursor.execute("SELECT id, nro_consultorio FROM consultorio WHERE estado = 'A'")
+        cursor.execute("""
+            SELECT id, nro_consultorio
+            FROM consultorio
+            WHERE estado = 'A'
+        """)
         consultorios = cursor.fetchall()
+        
         cursor.close()
         db.close()
         return consultorios
@@ -80,108 +85,52 @@ def obtener_consultorios(doctor_id):
         print(f"Error al obtener consultorios: {str(e)}")
         return []
 
+def generar_lista_horas():
+    horas = []
+    hora_inicial = datetime.strptime('08:00:00', '%H:%M:%S')
+    hora_final = datetime.strptime('18:00:00', '%H:%M:%S')
+    intervalo = timedelta(minutes=20)
+    
+    while hora_inicial <= hora_final:
+        horas.append(hora_inicial.strftime('%H:%M:%S'))
+        hora_inicial += intervalo
+    
+    return horas
 
-def verificar_disponibilidad(consultorio_id, fecha, hora_ini, hora_fin):
-    """verifica si el consultorio está disponible en la fecha y hora especificadas"""
-    try:
-        db = get_db_connection()
-        cursor = db.cursor(dictionary=True)
-        cursor.execute("""
-            SELECT * FROM consulta 
-            WHERE consultorio_id = %s 
-            AND fecha = %s 
-            AND ((hora_ini < %s AND hora_fin > %s) OR (hora_ini < %s AND hora_fin > %s))
-        """, (consultorio_id, fecha, hora_fin, hora_ini, hora_ini, hora_fin))
-        consulta = cursor.fetchone()
-        cursor.close()
-        db.close()
-        return consulta is None
-    except Exception as e:
-        print(f"Error al verificar disponibilidad: {str(e)}")
-        return False
+def obtener_horas_inicio_consultas(fecha):
+    db = get_db_connection()
+    cursor = db.cursor(dictionary=True)
 
-
-def obtener_horarios_disponibles(consultorio_id, fecha):
-    """Obtiene los horarios disponibles en intervalos de 20 minutos para un consultorio en una fecha específica."""
-    try:
-        db = get_db_connection()
-        cursor = db.cursor(dictionary=True)
-
-        # Obtener las consultas existentes para el consultorio en la fecha especificada
-        cursor.execute("""
-            SELECT hora_ini, hora_fin 
-            FROM consulta 
-            WHERE consultorio_id = %s AND fecha = %s
-        """, (consultorio_id, fecha))
-        consultas = cursor.fetchall()
-
-        # Definir el horario de trabajo (por ejemplo, de 8:00 a 18:00)
-        horario_inicio = time(8, 0)  # 8:00 AM
-        horario_fin = time(18, 0)    # 6:00 PM
-
-        # Generar todos los intervalos de 20 minutos en el horario de trabajo
-        intervalos = []
-        tiempo_actual = datetime.combine(datetime.today(), horario_inicio)
-        while tiempo_actual.time() <= horario_fin:
-            intervalos.append(tiempo_actual.time())
-            tiempo_actual += timedelta(minutes=20)
-
-        # Filtrar los intervalos que no están ocupados por consultas existentes
-        horarios_disponibles = []
-        for intervalo in intervalos:
-            disponible = True
-            intervalo_ini = intervalo
-            intervalo_fin = (datetime.combine(datetime.today(), intervalo) + timedelta(minutes=20)).time()
-
-            for consulta in consultas:
-                if not (intervalo_fin <= consulta['hora_ini'] or intervalo_ini >= consulta['hora_fin']):
-                    disponible = False
-                    break
-
-            if disponible:
-                horarios_disponibles.append(intervalo_ini.strftime('%H:%M'))
-
-        cursor.close()
-        db.close()
-        return horarios_disponibles
-    except Exception as e:
-        print(f"Error al obtener horarios disponibles: {str(e)}")
-        return []
-
-
-def crear_consulta(paciente_id, doctor_id, consultorio_id, fecha, hora_ini,tipo):
-    """Crea una nueva consulta"""
-    try:
-        db = get_db_connection()
-        cursor = db.cursor()
-
-        # Verificar que la hora_ini esté en un intervalo válido (cada 20 minutos)
-        hora_ini_time = datetime.strptime(hora_ini, '%H:%M').time()
-        minutos = hora_ini_time.minute
-        if minutos not in [0, 20]:
-            return {"success": False, "error": "El horario debe ser en intervalos de 20 minutos."}
-
-        # Calcular hora_fin (20 minutos después de hora_ini)
-        hora_fin_time = (datetime.combine(datetime.today(), hora_ini) + timedelta(minutes=20)).time()
-
-        # Verificar disponibilidad del horario
-        disponible = verificar_disponibilidad(consultorio_id, fecha, hora_ini, hora_fin_time)
-        if not disponible:
-            return {"success": False, "error": "El horario seleccionado no está disponible."}
-
-        cursor.execute("""
-            INSERT INTO consulta (paciente_id, doctor_id, consultorio_id, fecha, hora_ini, hora_fin, tipo, estado)
-            VALUES (%s, %s, %s, %s, %s, %s, %s, 'A')
-        """, (paciente_id, doctor_id, consultorio_id, fecha, hora_ini_time, hora_fin_time, tipo))
-        db.commit()
-        consulta_id = cursor.lastrowid
-        cursor.close()
-        db.close()
-        return {"success": True, "consulta_id": consulta_id}
-    except Exception as e:
-        print(f"Error al crear consulta: {str(e)}")
-        return {"success": False, "error": str(e)}
-
+    query = "SELECT hora_ini FROM consulta WHERE estado = 'A' AND fecha = %s"
+    cursor.execute(query, (fecha,))
+    resultados = cursor.fetchall()
+    
+    horas_inicio = [
+        (consulta['hora_ini'].total_seconds() // 3600,  # horas
+         (consulta['hora_ini'].total_seconds() % 3600) // 60)  # minutos
+        for consulta in resultados
+    ]
+    
+    # Formateamos las horas y minutos en formato 'HH:MM:SS'
+    horas_inicio = [f'{int(hora):02}:{int(minuto):02}:00' for hora, minuto in horas_inicio]
+    
+    # Generar la lista de horas posibles entre las 08:00:00 y las 18:00:00 con intervalos de 30 minutos
+    hora_ini = []
+    hora_inicial = datetime.strptime('08:00:00', '%H:%M:%S')
+    hora_final = datetime.strptime('18:00:00', '%H:%M:%S')
+    intervalo = timedelta(minutes=30)
+    
+    
+    while hora_inicial <= hora_final:
+        hora_formateada = hora_inicial.strftime('%H:%M:%S')
+        # Añadir a la lista solo si la hora no está ocupada
+        if hora_formateada not in horas_inicio:
+            hora_ini.append(hora_formateada)
+        hora_inicial += intervalo
+    
+    cursor.close()
+    
+    return hora_ini
 
 def obtener_consulta_por_id(consulta_id):
     """Obtiene los detalles de una consulta por su ID"""
@@ -207,3 +156,32 @@ def obtener_consulta_por_id(consulta_id):
     except Exception as e:
         print(f"Error al obtener consulta: {str(e)}")
         return None
+    
+
+def crear_consulta(paciente_id, doctor_id, consultorio_id, fecha, hora_ini,tipo):
+    """Crea una nueva consulta"""
+    try:
+        db = get_db_connection()
+        cursor = db.cursor()
+
+        # Verificar que la hora_ini esté en un intervalo válido (cada 20 minutos)
+        hora_ini_time = datetime.strptime(hora_ini, '%H:%M').time()
+        minutos = hora_ini_time.minute
+        if minutos not in [0, 20]:
+            return {"success": False, "error": "El horario debe ser en intervalos de 20 minutos."}
+
+        # Calcular hora_fin (20 minutos después de hora_ini)
+        hora_fin_time = (datetime.combine(datetime.today(), hora_ini) + timedelta(minutes=20)).time()
+
+        cursor.execute("""
+            INSERT INTO consulta (paciente_id, doctor_id, consultorio_id, fecha, hora_ini, hora_fin, tipo, estado)
+            VALUES (%s, %s, %s, %s, %s, %s, %s, 'A')
+        """, (paciente_id, doctor_id, consultorio_id, fecha, hora_ini_time, hora_fin_time, tipo))
+        db.commit()
+        consulta_id = cursor.lastrowid
+        cursor.close()
+        db.close()
+        return {"success": True, "consulta_id": consulta_id}
+    except Exception as e:
+        print(f"Error al crear consulta: {str(e)}")
+        return {"success": False, "error": str(e)}
