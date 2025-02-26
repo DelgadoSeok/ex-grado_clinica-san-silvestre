@@ -8,20 +8,26 @@ def obtener_reporte_dinero_recaudado(fecha_inicio, fecha_fin):
         
         query = """
             SELECT 
-            	cons.id,
-            	per.nombres,
+                cons.id,
+                per.nombres,
                 per.p_apellido,
                 per.s_apellido,
-            	cons.fecha, 
-            	cons.hora_ini, 
-            	cons.importe
-            FROM consulta as cons, persona as per
+                cons.fecha, 
+                cons.hora_ini, 
+                cons.importe
+            FROM consulta AS cons, persona AS per
             WHERE cons.paciente_id = per.id 
             AND cons.fecha BETWEEN %s AND %s
-            ORDER BY fecha ASC, hora_ini ASC
+            ORDER BY cons.fecha ASC, cons.hora_ini ASC
         """
+        
         cursor.execute(query, (fecha_inicio, fecha_fin))
         resultados = cursor.fetchall()
+
+        # Formatear los datos para incluir el nombre completo del paciente
+        for row in resultados:
+            row["paciente"] = f"{row['nombres']} {row['p_apellido']} {row['s_apellido']}".strip()
+            del row["nombres"], row["p_apellido"], row["s_apellido"]  # Eliminamos campos innecesarios
 
         cursor.close()
         db.close()
