@@ -1,4 +1,26 @@
   /* Botón para abrir el modal */
+  html, body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    box-sizing: border-box;
+}
+.table-container {
+  width: 100%;
+  margin: 20px auto;
+  padding: 20px;
+  box-sizing: border-box;
+  background-color: #fff;
+  border-radius: 6px;
+  margin-top: 20px;
+}
+.titulo-gestion {
+  text-align: left; 
+  color: #000; 
+  margin-bottom: 10px;
+  /* otros estilos que quieras */
+}
+
   .btnOpenModal {
     background-color: #2ecc71; /* Verde */
     color: #fff;
@@ -143,4 +165,8 @@
   }
   .btnDeshabilitar:hover {
     background-color: #c0392b;
+  }
+  #mensaje {
+    color: #000 !important;
+    opacity: 1 !important;
   }
