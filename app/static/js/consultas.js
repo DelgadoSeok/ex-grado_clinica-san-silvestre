@@ -115,6 +115,10 @@ function crearConsulta() {
   const horaIni = document.getElementById("hora_ini").value;
   const tipo = document.getElementById("tipo").value;
 
+  const horaIniDate = new Date(`1970-01-01T${horaIni}`); 
+  horaIniDate.setMinutes(horaIniDate.getMinutes() + 20);
+  const horaFin = horaIniDate.toTimeString().slice(0, 5);
+
   fetch("/consultas/crear_consulta", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -124,7 +128,9 @@ function crearConsulta() {
       consultorio_id: consultorioId,
       fecha: fecha,
       hora_ini: horaIni,
+      hora_fin: horaFin, 
       tipo: tipo,
+      estado: 'A'
     }),
   })
     .then((response) => response.json())

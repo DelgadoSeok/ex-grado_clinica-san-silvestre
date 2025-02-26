@@ -45,13 +45,15 @@ def crear_consulta_route():
     doctor_id = data.get('doctor_id')
     consultorio_id = data.get('consultorio_id')
     fecha = data.get('fecha')
-    hora_ini = data.get('hora_ini')
+    hora_ini = data.get('hora_ini')  
+    hora_fin = data.get('hora_fin')  
     tipo = data.get('tipo')
+    estado = data.get('estado', 'A')  
 
-    if not (paciente_id and doctor_id and consultorio_id and fecha and hora_ini and tipo):
+    if not (paciente_id and doctor_id and consultorio_id and fecha and hora_ini and hora_fin and tipo):
         return jsonify({"success": False, "error": "Datos incompletos"}), 400
 
-    resultado = crear_consulta(paciente_id, doctor_id, consultorio_id, fecha, hora_ini, tipo)
+    resultado = crear_consulta(paciente_id, doctor_id, consultorio_id, fecha, hora_ini, hora_fin, tipo, estado)
     return jsonify(resultado)
 
 
