@@ -44,7 +44,7 @@
                 <li><a href="/consultas" id="consultas-link">Consulta</a></li>
                 <li><a href="/reportes" id="reportes-link">Reportes</a></li>
                 <li><a href="/duenos" id="duenos-link">Dueños</a></li>
-
+                <li><a href="{{ url_for('asignar_consultorios.index') }}">Asignar Consultorios</a></li>
                 {% else %}
                 <!-- Si no es admin ni secretario, se muestra algo genérico -->
                 <li><a href="#">Sin opciones disponibles</a></li>
