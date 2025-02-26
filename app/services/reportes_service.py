@@ -36,3 +36,33 @@ def obtener_reporte_dinero_recaudado(fecha_inicio, fecha_fin):
     except Exception as e:
         print(f"Error al obtener el reporte: {str(e)}")
         return []
+
+def obtener_consultas_por_doctor(doctor_id, fecha_inicio, fecha_fin):
+    """Obtiene las consultas de un doctor en un intervalo de tiempo sin SP"""
+    try:
+        db = get_db_connection()
+        cursor = db.cursor(dictionary=True)
+
+        query = """
+            SELECT 
+                cons.id,
+                per.nombres + ' ' + per.p_apellido + ' ' + per.s_apellido AS paciente,
+                cons.fecha,
+                cons.hora_ini,
+                cons.importe
+            FROM consulta AS cons
+            INNER JOIN persona AS per ON cons.paciente_id = per.id
+            WHERE cons.doctor_id = %s
+            AND cons.fecha BETWEEN %s AND %s
+            ORDER BY cons.fecha ASC, cons.hora_ini ASC
+        """
+        cursor.execute(query, (doctor_id, fecha_inicio, fecha_fin))
+        resultados = cursor.fetchall()
+
+        cursor.close()
+        db.close()
+        
+        return resultados
+    except Exception as e:
+        print(f"Error al obtener las consultas: {str(e)}")
+        return []
