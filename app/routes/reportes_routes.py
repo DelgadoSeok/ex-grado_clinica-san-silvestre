@@ -13,3 +13,15 @@ def reporte_dinero():
 
     datos = obtener_reporte_dinero_recaudado(fecha_inicio, fecha_fin)
     return jsonify({"success": True, "data": datos})
+
+@reportes_bp.route('/api/reporte_consultas', methods=['GET'])
+def reporte_consultas():
+    doctor_id = request.args.get('doctor_id')
+    fecha_inicio = request.args.get('fecha_inicio')
+    fecha_fin = request.args.get('fecha_fin')
+
+    if not doctor_id or not fecha_inicio or not fecha_fin:
+        return jsonify({"success": False, "error": "Debe proporcionar doctor, fecha de inicio y fin"}), 400
+
+    datos = obtener_consultas_por_doctor(doctor_id, fecha_inicio, fecha_fin)
+    return jsonify({"success": True, "data": datos})
