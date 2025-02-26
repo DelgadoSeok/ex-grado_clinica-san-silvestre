@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Clínica San Silvestre - Reporte Dinero</title>
-    <link rel="stylesheet" href="CssReporte.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles_reportes.css') }}">
 </head>
 <body>
     <h1>Clínica San Silvestre</h1>
@@ -34,6 +34,6 @@
         </table>
     </div>
     
-    <script src="JsReporteDinero.js"></script>
+    <script src="{{ url_for('static', filename='js/reporteDinero.js') }}"></script>
 </body>
 </html>
