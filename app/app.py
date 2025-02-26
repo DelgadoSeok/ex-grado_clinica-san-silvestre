@@ -28,6 +28,9 @@ from routes.doctor_route import doctor_bp
 
 from routes.asignar_consultorios_route import asignar_consultorios_bp
 
+from routes.reportes_routes import reportes_bp
+
+
 # inicializar aplicacion
 app = Flask(__name__)
 app.secret_key = os.getenv("SECRET_KEY", "supersecretkey123")  # Cambia esto por una clave segura
@@ -54,6 +57,9 @@ app.register_blueprint(consultas_bp)
 app.register_blueprint(doctor_bp)
 
 app.register_blueprint(asignar_consultorios_bp)
+
+app.register_blueprint(reportes_bp)
+
 
 # Context processor para compartir el rol de usuario en todas las plantillas
 @app.context_processor
