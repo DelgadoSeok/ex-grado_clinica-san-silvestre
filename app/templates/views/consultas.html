@@ -19,14 +19,14 @@
     <div id="consultas" class="section">
       <div class="section-header">
         <h3>Listado de Consultas</h3>
-        <button onclick="openModal()">Generar Consulta</button>
+        <button onclick="openModal()">Reservar Consulta</button>
       </div>
 
       <!-- Modal para registrar un nuevo consulta -->
       <div id="modal" class="modal">
         <div class="modal-content">
           <span class="close" onclick="closeModal()">&times;</span>
-          <h4>Crear Nueva Consulta</h4>
+          <h4>Reservar Consulta o Re-Consulta</h4>
           <form id="consultaForm">
             <label for="paciente_id">Paciente:</label>
             <select id="paciente_id" name="paciente_id" required>
@@ -57,7 +57,7 @@
               <option value="R">Reconsulta</option>
             </select>
 
-            <button type="submit">Crear</button>
+            <button type="submit">Reservar</button>
           </form>
         </div>
       </div>
@@ -67,7 +67,7 @@
       {% set filas = [] %}
       {% for consulta in consultas %}
         {% set fila = [consulta.id, consulta.paciente_nombre, consulta.doctor_nombre, consulta.nro_consultorio, consulta.fecha, consulta.hora_ini, consulta.hora_fin, consulta.tipo, consulta.estado] %}
-        {% set acciones = [{'texto': 'Generar PDF', 'clase': 'edit', 'funcion': 'generarPDF', 'parametros': consulta.id}] %}
+        {% set acciones = [{'texto': 'Generar PDF', 'clase': 'pdf', 'funcion': 'generarPDF', 'parametros': consulta.id}] %}
         {% set fila = fila + [acciones] %}
         {% set filas = filas.append(fila) %}
       {% endfor %}
