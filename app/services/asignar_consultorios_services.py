@@ -6,7 +6,12 @@ load_dotenv()
 def obtener_doctores():
     connection = get_db_connection()
     cursor = connection.cursor(dictionary=True)
-    query = "SELECT * FROM doctor WHERE estado = 'A'"
+    query = """
+    SELECT d.id, CONCAT(p.nombres, ' ', p.p_apellido, ' ', p.s_apellido) AS nombre_completo
+    FROM doctor d
+    JOIN persona p ON d.id = p.id
+    WHERE d.estado = 'A'
+    """
     cursor.execute(query)
     doctores = cursor.fetchall()
     cursor.close()
@@ -59,9 +64,11 @@ def obtener_asignaciones_activas():
     connection = get_db_connection()
     cursor = connection.cursor(dictionary=True)
     query = """
-    SELECT ac.id, d.matricula_profesional, ac.dia_semana, ac.hora_ini, ac.hora_fin, c.nro_consultorio
+    SELECT ac.id, CONCAT(p.nombres, ' ', p.p_apellido, ' ', p.s_apellido) AS nombre_completo,
+           ac.dia_semana, ac.hora_ini, ac.hora_fin, c.nro_consultorio
     FROM asignacion_consultorio ac
     JOIN doctor d ON ac.doctor_id = d.id
+    JOIN persona p ON d.id = p.id
     JOIN consultorio c ON ac.consultorio_id = c.id
     WHERE ac.estado = 'A'
     """
@@ -70,6 +77,7 @@ def obtener_asignaciones_activas():
     cursor.close()
     connection.close()
     return asignaciones
+
 
 def deshabilitar_asignacion(asignacion_id):
     try:
