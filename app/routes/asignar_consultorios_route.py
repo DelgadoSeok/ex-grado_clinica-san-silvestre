@@ -12,6 +12,7 @@ asignar_consultorios_bp = Blueprint('asignar_consultorios', __name__, url_prefix
 
 @asignar_consultorios_bp.route('/', methods=['GET'])
 def index():
+    print("Accediendo a la vista de Asignar Consultorios")
     doctores = obtener_doctores()
     consultorios = obtener_consultorios_activos()
     asignaciones = obtener_asignaciones_activas()
