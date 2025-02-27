@@ -13,6 +13,11 @@ function closeEditModal() {
   document.getElementById("editModal").style.display = "none";
 }
 
+function cerrarModalNuevaHistoria() {
+  document.getElementById("nuevaHistoriaModal").style.display = "none";
+}
+
+
 // Función para agregar un nuevo campo de número de teléfono
 function agregarTelefono() {
     const telefonosContainer = document.getElementById('telefonosContainer');
@@ -73,7 +78,44 @@ function registrarPaciente() {
         // cargarTiposEgreso();
       })
       .catch(error => console.error('Error al registrar paciente:', error));
-  }
+}
+
+
+// envia los datos necesarios para crear una nueva historia clinica para un paciente en db
+function crearHistoriaClinica(paciente_id, nro_carpeta_fisica) {
+  let nuevaHistoriaForm = document.getElementById("nuevaHistoriaForm");
+
+  let pacienteId = nuevaHistoriaForm.querySelector("[name='paciente_id']").value;
+  let nroCarpetaFisica = nuevaHistoriaForm.querySelector("[name='nro_carpeta_fisica']").value;
+  // let sApellido = nuevoDoctorForm.querySelector("[name='s_apellido']").value;
+  // let fechaNacimiento = nuevoDoctorForm.querySelector("[name='fecha']").value;
+  // let sexo = nuevoDoctorForm.querySelector("[name='sexo']").value;
+  // let ci = nuevoDoctorForm.querySelector("[name='ci']").value;
+  // let email = nuevoDoctorForm.querySelector("[name='email']").value;
+  // let direccion = nuevoDoctorForm.querySelector("[name='direccion']").value;
+
+  fetch('/paciente/crear_historia_clinica', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ pacienteId, nroCarpetaFisica })
+  })
+    .then(response => response.json())
+    .then(data => {
+      alert(data.message);
+      location.reload();
+      cerrarModalNuevaHistoria();
+      // cargarEgresos();
+      // cargarTiposEgreso();
+    })
+    .catch(error => console.error('Error al crear nueva historia clinica: ', error));
+}
+
+function abrirNuevaHistoriaModal(paciente_id) {
+  document.getElementById('paciente_id').value = paciente_id;
+  document.getElementById('nuevaHistoriaModal').style.display = 'block';
+}
+
+
 
 
 function openEditModal(id, fecha, monto, observacion, tipo, descartado) {

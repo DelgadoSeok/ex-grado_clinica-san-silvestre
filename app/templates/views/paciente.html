@@ -90,7 +90,7 @@
         </div>
       </div>
 
-      <!-- Modal para registrar dueño -->
+      <!-- Modal para editar -->
       <div id="editModal" class="modal">
         <div class="modal-content">
           <span class="close" onclick="closeEditModal()">&times;</span>
@@ -119,6 +119,26 @@
         </div>
       </div>
 
+      <!-- Modal para crear historia clinica -->
+      <div id="nuevaHistoriaModal" class="modal">
+        <div class="modal-content">
+          <span class="close" onclick="cerrarModalNuevaHistoria()">&times;</span>
+          <h4>Crear Historia Clinica</h4>
+          <form id="nuevaHistoriaForm" onsubmit="event.preventDefault(); crearHistoriaClinica();">
+            <input type="hidden" id="edit_id">
+
+            <label for="paciente_id">Paciente ID:</label>
+            <input type="number" id="paciente_id" name="paciente_id" step="0.01" required readonly>
+
+            <label for="nro_carpeta_fisica">Número de carpeta física:</label>
+            <input type="text" id="nro_carpeta_fisica" name="nro_carpeta_fisica">
+
+            <button type="submit">Crear Historia Clinica</button>
+          </form>
+        </div>
+      </div>
+
+
 
       <table border="1">
         <thead>
@@ -145,8 +165,9 @@
 
             <td>
               <button class="btn btn-edit" onclick="openEditModal()">Editar</button>
-              <button class="btn btn-edit" onclick="activar_inactivar('{{paciente.id}}', '{{paciente.estado}}')">{{ 'registrar Retiro' if paciente.estado == 'A' else 'Registrar Ingreso' }}</button>
-            </td>
+                {% if paciente.nro_carpeta_fisica == "No tiene aún" %}
+                <button class="btn btn-edit" onclick="abrirNuevaHistoriaModal('{{paciente.id}}')">Crear Historia Clinica</button>
+                {% endif %}</td>
           </tr>
           {% endfor %}
           {% else %}
