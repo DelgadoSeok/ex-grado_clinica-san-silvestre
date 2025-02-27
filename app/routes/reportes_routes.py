@@ -5,11 +5,11 @@ reportes_bp = Blueprint('reportes', __name__)
 
 @reportes_bp.route('/reporte_dinero', methods=['GET'])
 def reporte_consultas():
-    return render_template('reportes.html') 
+    return render_template('views/reporteDineros.html') 
 
 @reportes_bp.route('/reporte_consultas', methods=['GET'])
 def reporte_consultas():
-    return render_template('reportes.html') 
+    return render_template('views/reporteConsultas.html') 
 
 @reportes_bp.route('/api/reporte_dinero', methods=['GET'])
 def reporte_dinero():
