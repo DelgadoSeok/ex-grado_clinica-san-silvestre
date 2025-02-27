@@ -94,6 +94,38 @@ function openEditModal(id, fecha, monto, observacion, tipo, descartado) {
   document.getElementById('editModal').style.display = 'block';
 }
 
+
+function activar_inactivar(doctor_id, doctor_estado) {
+  let proceder = false;
+
+  // si se retira un doctor activo, avisar de que se liberarán los consultorios
+  if(doctor_estado == 'A' && confirm("¿Retirar a este doctor hará que todos sus consultorios asignados ahora estén libres. Estás seguro de continuar?")){
+      proceder = true;
+  }
+  if(doctor_estado == 'I'){ proceder = true; }
+
+  if(proceder){
+    fetch('/doctor/activar_inactivar', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ doctor_id, doctor_estado })
+    })
+      .then(response => response.json())
+      .then(data => {
+        alert(data.message);
+        location.reload();
+        // closeModal();
+        // cargarEgresos();
+        // cargarTiposEgreso();
+      })
+      .catch(error => console.error('Error al registrar egreso:', error));
+  }
+
+
+  
+
+}
+
 // function editarEgreso() {
 //   let id = document.getElementById("edit_id").value;
 //   let fecha = document.getElementById("edit_fecha").value;

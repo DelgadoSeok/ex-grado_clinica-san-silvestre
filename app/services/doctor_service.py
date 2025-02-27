@@ -228,6 +228,70 @@ def registrar_doctor_especialidad(doctor_id, especialidad_id):
         return {"success": False, "error": str(e)}
     
 
+# cambiar el estado del doctor
+def cambiar_estado(doctor_id, nuevo_estado):
+
+    try:
+        db = get_db_connection()
+        cursor = db.cursor()
+
+        consulta = """
+        UPDATE doctor
+        SET estado = %s
+        WHERE id = %s
+        """
+
+        valores = (
+            nuevo_estado,
+            doctor_id
+            
+        )
+        
+        cursor.execute(consulta, valores)  # Ejecutar consulta SQL
+        db.commit()  # Confirmar la transacción
+
+        cursor.close()
+        db.close()
+        return {"success": True, "message": "Estado de doctor cambiado correctamente"}
+
+    except Exception as e:
+        return {"success": False, "error": str(e)}
+
+
+# inactivar las asignaciones de consultorio del doctor indicado (descartar asignaciones, los consultorios quedan libres)
+def inactivar_asignaciones_consultorios(doctor_id):
+
+    try:
+        db = get_db_connection()
+        cursor = db.cursor()
+
+        consulta = """
+        UPDATE asignacion_consultorio
+        SET estado = 'I'
+        WHERE doctor_id = %s;
+        """
+
+        valores = (
+            doctor_id
+        )
+        
+        cursor.execute(consulta, valores)  # Ejecutar consulta SQL
+        db.commit()  # Confirmar la transacción
+
+        cursor.close()
+        db.close()
+        return {"success": True, "message": "Asingacines de consultorio inactivadas correctamente"}
+
+    except Exception as e:
+        return {"success": False, "error": str(e)}
+
+
+
+
+
+
+
+
 
 
 # def editar_dueno(dueno_id, nombres, apellidos, ci, telf, direccion):
