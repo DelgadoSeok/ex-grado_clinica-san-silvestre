@@ -25,3 +25,8 @@ def reporte_consultas():
 
     datos = obtener_consultas_por_doctor(doctor_id, fecha_inicio, fecha_fin)
     return jsonify({"success": True, "data": datos})
+
+@reportes_bp.route('/api/doctores', methods=['GET'])
+def obtener_lista_doctores():
+    doctores = obtener_doctores()
+    return jsonify({"success": True, "data": doctores})
