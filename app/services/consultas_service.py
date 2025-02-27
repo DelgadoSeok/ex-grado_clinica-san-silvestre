@@ -84,18 +84,7 @@ def obtener_consultorios():
     except Exception as e:
         print(f"Error al obtener consultorios: {str(e)}")
         return []
-
-def generar_lista_horas():
-    horas = []
-    hora_inicial = datetime.strptime('08:00:00', '%H:%M:%S')
-    hora_final = datetime.strptime('18:00:00', '%H:%M:%S')
-    intervalo = timedelta(minutes=20)
     
-    while hora_inicial <= hora_final:
-        horas.append(hora_inicial.strftime('%H:%M:%S'))
-        hora_inicial += intervalo
-    
-    return horas
 
 def obtener_horas_inicio_consultas(fecha):
     db = get_db_connection()
@@ -156,8 +145,28 @@ def obtener_consulta_por_id(consulta_id):
     except Exception as e:
         print(f"Error al obtener consulta: {str(e)}")
         return None
-    
 
+#Con procedimiento
+# def obtener_consulta_por_id(consulta_id):
+#     """Obtiene los detalles de una consulta por su ID utilizando el procedimiento almacenado"""
+#     try:
+#         db = get_db_connection()
+#         cursor = db.cursor(dictionary=True)
+
+#         # Llamar al procedimiento almacenado
+#         cursor.callproc('ObtenerConsultaPorID', (consulta_id,))
+
+#         # Obtener los resultados del procedimiento almacenado
+#         resultados = cursor.stored_results()
+#         consulta = next(resultados).fetchone()  # Obtener la primera fila de resultados
+
+#         cursor.close()
+#         db.close()
+#         return consulta
+#     except Exception as e:
+#         print(f"Error al obtener consulta: {str(e)}")
+#         return None
+    
 def crear_consulta(paciente_id, doctor_id, consultorio_id, importe, fecha, hora_ini, hora_fin, tipo, estado):
     """Crea una nueva consulta"""
     try:
