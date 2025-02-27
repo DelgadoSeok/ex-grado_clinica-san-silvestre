@@ -66,3 +66,21 @@ def obtener_consultas_por_doctor(doctor_id, fecha_inicio, fecha_fin):
     except Exception as e:
         print(f"Error al obtener las consultas: {str(e)}")
         return []
+
+def obtener_doctores():
+    """Obtiene la lista de doctores"""
+    try:
+        db = get_db_connection()
+        cursor = db.cursor(dictionary=True)
+
+        query = "SELECT id, nombres, p_apellido, s_apellido FROM persona WHERE rol = 'doctor'"
+        cursor.execute(query)
+        doctores = cursor.fetchall()
+
+        cursor.close()
+        db.close()
+
+        return doctores
+    except Exception as e:
+        print(f"Error al obtener doctores: {str(e)}")
+        return []
