@@ -89,6 +89,12 @@ table tr:nth-child(even) {
 table tr:hover {
     background-color: #f1f1f1;
 }
+.close:hover,
+.close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
 
 .modal {
     display: none;
@@ -108,13 +114,6 @@ table tr:hover {
     float: right;
     font-size: 28px;
     font-weight: bold;
-}
-
-.close:hover,
-.close:focus {
-    color: black;
-    text-decoration: none;
-    cursor: pointer;
 }
 
 .modal-content {
@@ -139,7 +138,7 @@ table tr:hover {
     margin-top: 10px;
 }
 
-.modal-content form input {
+.modal-content form input,  .modal-content form select,  .modal-content form textarea {
     width: 100%;
     padding: 10px;
     margin-top: 5px;
@@ -176,6 +175,11 @@ table tr:hover {
     cursor: pointer;
     font-size: 16px;
     transition: background 0.3s ease;
+}
+
+.btn-pdf {
+    background-color: #303133 ;
+    font-size: 12px;
 }
 
 /* Efecto hover */

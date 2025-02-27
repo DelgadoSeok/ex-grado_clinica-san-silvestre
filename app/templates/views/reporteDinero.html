@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clínica San Silvestre - Reporte Dinero</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles_reportes.css') }}">
+</head>
+<body>
+    <h1>Clínica San Silvestre</h1>
+    <div class="container">
+        <h2>Reporte de Dinero Recaudado</h2>
+        <label for="fechaInicio">Fecha y hora de inicio:</label>
+        <input type="datetime-local" id="fechaInicio">
+        
+        <label for="fechaFin">Fecha y hora de fin:</label>
+        <input type="datetime-local" id="fechaFin">
+        
+        <button onclick="cargarDatos()">Generar Reporte</button>
+        <button onclick="window.print()">Imprimir</button>
+        
+        <table>
+            <thead>
+                <tr>
+                    <th>ID Consulta</th>
+                    <th>Paciente</th>
+                    <th>Fecha</th>
+                    <th>Importe</th>
+                </tr>
+            </thead>
+            <tbody id="tablaConsultas">
+                <!-- Datos cargados de la consula :D -->
+            </tbody>
+        </table>
+    </div>
+    
+    <script src="{{ url_for('static', filename='js/reporteDinero.js') }}"></script>
+</body>
+</html>
