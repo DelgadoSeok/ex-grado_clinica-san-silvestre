@@ -3,6 +3,9 @@ document.addEventListener("DOMContentLoaded", function () {
   cargarPacientes();
   cargarDoctores();
   cargarConsultorios();
+  const fechaInput = document.getElementById("fecha");
+  const today = new Date().toISOString().split("T")[0]; // Formato YYYY-MM-DD
+  fechaInput.setAttribute("min", today);
 
   // Evento para cargar horarios disponibles cuando se selecciona una fecha
   document.getElementById("fecha").addEventListener("change", function () {
@@ -115,7 +118,7 @@ function crearConsulta() {
   const fecha = document.getElementById("fecha").value;
   const horaIni = document.getElementById("hora_ini").value;
   const tipo = document.getElementById("tipo").value;
-  const horaIniDate = new Date(`1970-01-01T${horaIni}`); 
+  const horaIniDate = new Date(`1970-01-01T${horaIni}`);
   horaIniDate.setMinutes(horaIniDate.getMinutes() + 20);
   const horaFin = horaIniDate.toTimeString().slice(0, 5);
 
@@ -129,9 +132,9 @@ function crearConsulta() {
       importe: importe,
       fecha: fecha,
       hora_ini: horaIni,
-      hora_fin: horaFin, 
+      hora_fin: horaFin,
       tipo: tipo,
-      estado: 'A'
+      estado: "A",
     }),
   })
     .then((response) => response.json())
