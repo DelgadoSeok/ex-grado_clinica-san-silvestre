@@ -20,6 +20,7 @@
       <div class="section-header">
         <h3>Gestión de Consultorios</h3>
         <button onclick="openModal()">Registrar Nuevo Consultorio</button>
+        <button class="btn btn-edit" onclick="openEditModal()">Editar</button>
       </div>
 
       <!-- Modal para registrar nuevo doctor -->
@@ -51,31 +52,24 @@
         <div class="modal-content">
           <span class="close" onclick="closeEditModal()">&times;</span>
           <h4>Editar Consultorio</h4>
-          <form id="editEgresoForm" onsubmit="event.preventDefault(); editarEgreso();">
-            <input type="hidden" id="edit_id">
-
-            <label for="edit_fecha">Fecha:</label>
-            <input type="date" id="edit_fecha" name="edit_fecha" required>
-
-            <label for="edit_monto">Monto:</label>
-            <input type="number" id="edit_monto" name="edit_monto" step="0.01" required>
-
-            <label for="edit_observacion">Observación:</label>
-            <input type="text" id="edit_observacion" name="edit_observacion">
-
-            <label for="edit_egreso_tipo_id">Tipo de Egreso:</label>
-            <select id="edit_egreso_tipo_id" name="edit_egreso_tipo_id" required>
+          <form id="f_editar_consultorio" onsubmit="event.preventDefault(); actualizar_consultorio();">
+            <label for="edit_id_consultorio">Id:</label>
+            <input type="number" id="edit_id_consultorio" name="edit_id_consultorio">
+      
+            <label for="edit_nro_consultorio">Nro. Consultorio:</label>
+            <input type="text" id="edit_nro_consultorio" name="edit_nro_consultorio" required>
+      
+            <label for="edit_estado">Estado:</label>
+            <select id="edit_estado" name="edit_estado" required>
+              <option value="A">Activo</option>
+              <option value="I">Inactivo</option>
             </select>
-
-            <label for="edit_descartado">Descartado:</label>
-            <input type="checkbox" id="edit_descartado" name="edit_descartado" value="1">
-
+      
             <button type="submit">Actualizar</button>
           </form>
         </div>
       </div>
-
-
+      
       <h3>Lista de Consultorios</h3>
       <table border="1">
         <thead>
@@ -96,10 +90,6 @@
             <td>{{ consultorio.equipamientos }}</td>
             <td>{{ consultorio.fecha_registro }}</td>
             <td>{{ consultorio.estado }}</td>
-            <td>
-              <button class="btn btn-edit" onclick="openEditModal()">Editar</button>
-              <!--<button class="btn btn-edit" onclick="openEditModal()">Cambiar Estado</button>-->
-            </td>
           </tr>
           {% endfor %}
           {% else %}

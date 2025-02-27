@@ -71,38 +71,37 @@ def registrar_consultorio(data):
         return {"success": False, "message": f"Error: {str(e)}"}
     
 
-def editar_consultorio(data):
+def actualizar_consultorio(id, data):
     try:
         db = get_db_connection()
         cursor = db.cursor()
-        # Verificar si el número de consultorio ya existe
-        consulta_verificacion = '''
-            SELECT COUNT(*) FROM consultorio WHERE nro_consultorio = %s
-        '''
-        cursor.execute(consulta_verificacion, (data['f_nro_consultorio'],))
-        resultado = cursor.fetchone()
 
-        if resultado[0] > 0:
-            cursor.close()
-            db.close()
+        # Validar que no se repita nro_consultorio (excepto el actual)
+        consulta_verificacion = '''
+            SELECT COUNT(*) FROM consultorio WHERE nro_consultorio = %s AND id != %s
+        '''
+        cursor.execute(consulta_verificacion, (data['nro_consultorio'], id))
+        if cursor.fetchone()[0] > 0:
             return {"success": False, "message": "El número de consultorio ya existe."}
 
-        # Insertar si no existe
-        consulta_insert = '''
-            INSERT INTO consultorio (nro_consultorio, fecha_registro, estado)
-            VALUES (%s, %s, %s)
+        # Actualizar consultorio
+        consulta_update = '''
+            UPDATE consultorio
+            SET nro_consultorio = %s, estado = %s
+            WHERE id = %s
         '''
         valores = (
-            data['f_nro_consultorio'],
-            data['f_fecha_registro'],
-            data['f_estado'],
+            data['nro_consultorio'],
+            data['estado'],
+            id
         )
-        cursor.execute(consulta_insert, valores)
+        cursor.execute(consulta_update, valores)
         db.commit()
 
-        cursor.close()
-        db.close()
-        return {"success": True, "message": "Consultorio registrado correctamente"}
+        return {"success": True, "message": "Consultorio actualizado correctamente"}
         
     except Exception as e:
         return {"success": False, "message": f"Error: {str(e)}"}
+    finally:
+        cursor.close()
+        db.close()
