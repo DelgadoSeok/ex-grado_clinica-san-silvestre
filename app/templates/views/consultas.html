@@ -43,6 +43,9 @@
               <option value="">Seleccione un consultorio</option>
             </select>
 
+            <label for="importe">Monto:</label>
+            <input type="number" id="importe" name="importe" required>
+
             <label for="fecha">Fecha:</label>
             <input type="date" id="fecha" name="fecha" required>
 
@@ -63,10 +66,10 @@
       </div>
 
       <!-- Tabla para mostrar los consultas -->
-      {% set encabezados = ['ID', 'Paciente', 'Doctor', 'Consultorio', 'Fecha', 'Hora Inicio', 'Hora Fin', 'Tipo', 'Estado', 'Acciones'] %}
+      {% set encabezados = ['ID', 'Paciente', 'Doctor', 'Consultorio','Monto', 'Fecha', 'Hora Inicio', 'Hora Fin', 'Tipo', 'Estado', 'Acciones'] %}
       {% set filas = [] %}
       {% for consulta in consultas %}
-        {% set fila = [consulta.id, consulta.paciente_nombre, consulta.doctor_nombre, consulta.nro_consultorio, consulta.fecha, consulta.hora_ini, consulta.hora_fin, consulta.tipo, consulta.estado] %}
+        {% set fila = [consulta.id, consulta.paciente_nombre, consulta.doctor_nombre, consulta.nro_consultorio,consulta.importe|int, consulta.fecha, consulta.hora_ini, consulta.hora_fin, consulta.tipo, consulta.estado] %}
         {% set acciones = [{'texto': 'Generar PDF', 'clase': 'pdf', 'funcion': 'generarPDF', 'parametros': consulta.id}] %}
         {% set fila = fila + [acciones] %}
         {% set filas = filas.append(fila) %}

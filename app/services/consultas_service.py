@@ -158,7 +158,7 @@ def obtener_consulta_por_id(consulta_id):
         return None
     
 
-def crear_consulta(paciente_id, doctor_id, consultorio_id, fecha, hora_ini, hora_fin, tipo, estado):
+def crear_consulta(paciente_id, doctor_id, consultorio_id, importe, fecha, hora_ini, hora_fin, tipo, estado):
     """Crea una nueva consulta"""
     try:
         db = get_db_connection()
@@ -166,14 +166,11 @@ def crear_consulta(paciente_id, doctor_id, consultorio_id, fecha, hora_ini, hora
 
         # Verificar que la hora_ini esté en un intervalo válido (cada 20 minutos)
         hora_ini_time = datetime.strptime(hora_ini, '%H:%M:%S').time() 
-        minutos = hora_ini_time.minute
-        if minutos not in [0, 20]:
-            return {"success": False, "error": "El horario debe ser en intervalos de 20 minutos."}
 
         cursor.execute("""
-            INSERT INTO consulta (paciente_id, doctor_id, consultorio_id, fecha, hora_ini, hora_fin, tipo, estado)
-            VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
-        """, (paciente_id, doctor_id, consultorio_id, fecha, hora_ini_time, hora_fin, tipo, estado))
+            INSERT INTO consulta (paciente_id, doctor_id, consultorio_id, importe, fecha, hora_ini, hora_fin, tipo, estado)
+            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)
+        """, (paciente_id, doctor_id, consultorio_id, importe, fecha, hora_ini_time, hora_fin, tipo, estado))
         db.commit()
         consulta_id = cursor.lastrowid
         cursor.close()

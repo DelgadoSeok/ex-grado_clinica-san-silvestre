@@ -111,10 +111,10 @@ function crearConsulta() {
   const pacienteId = document.getElementById("paciente_id").value;
   const doctorId = document.getElementById("doctor_id").value;
   const consultorioId = document.getElementById("consultorio_id").value;
+  const importe = document.getElementById("importe").value;
   const fecha = document.getElementById("fecha").value;
   const horaIni = document.getElementById("hora_ini").value;
   const tipo = document.getElementById("tipo").value;
-
   const horaIniDate = new Date(`1970-01-01T${horaIni}`); 
   horaIniDate.setMinutes(horaIniDate.getMinutes() + 20);
   const horaFin = horaIniDate.toTimeString().slice(0, 5);
@@ -126,6 +126,7 @@ function crearConsulta() {
       paciente_id: pacienteId,
       doctor_id: doctorId,
       consultorio_id: consultorioId,
+      importe: importe,
       fecha: fecha,
       hora_ini: horaIni,
       hora_fin: horaFin, 

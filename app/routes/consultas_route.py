@@ -44,16 +44,17 @@ def crear_consulta_route():
     paciente_id = data.get('paciente_id')
     doctor_id = data.get('doctor_id')
     consultorio_id = data.get('consultorio_id')
+    importe = data.get('importe')
     fecha = data.get('fecha')
     hora_ini = data.get('hora_ini')  
     hora_fin = data.get('hora_fin')  
     tipo = data.get('tipo')
     estado = data.get('estado', 'A')  
 
-    if not (paciente_id and doctor_id and consultorio_id and fecha and hora_ini and hora_fin and tipo):
+    if not (paciente_id and doctor_id and consultorio_id and importe and fecha and hora_ini and hora_fin and tipo ):
         return jsonify({"success": False, "error": "Datos incompletos"}), 400
 
-    resultado = crear_consulta(paciente_id, doctor_id, consultorio_id, fecha, hora_ini, hora_fin, tipo, estado)
+    resultado = crear_consulta(paciente_id, doctor_id, consultorio_id, importe, fecha, hora_ini, hora_fin, tipo, estado)
     return jsonify(resultado)
 
 
@@ -87,6 +88,7 @@ def descargar_reporte(consulta_id):
         ["Paciente", consulta['paciente_nombre']],
         ["Doctor", consulta['doctor_nombre']],
         ["Consultorio", consulta['nro_consultorio']],
+        ["Monto", consulta['importe']],
         ["Fecha", consulta['fecha']],
         ["Hora Inicio", consulta['hora_ini']],
         ["Hora Fin", consulta['hora_fin']],
