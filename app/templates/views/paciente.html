@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gestionar Doctores</title>
+  <link rel="stylesheet" href="styles.css">
+  <script src="../../static/js/doctor.js"></script>
+</head>
+
+<body>
+  <!-- Incluyendo menu desde shared -->
+  {% include 'shared/menu.html' %}
+
+  <div class="content">
+    <h2>Gestion de doctor</h2>
+    <div id="egresos" class="section">
+      <div class="section-header">
+        <h3>Lista de doctores</h3>
+        <button onclick="openModal()">Registrar Nuevo Doctor</button>
+      </div>
+
+      <!-- Modal para registrar nuevo doctor -->
+      <div id="modal" class="modal">
+        <div class="modal-content">
+          <span class="close" onclick="closeModal()">&times;</span>
+          <h4>Registrar nuevo doctor</h4>
+          <form id="nuevoDoctorForm" onsubmit="event.preventDefault(); registrarDoctor();">
+
+            <label for="nombres">Nombres:</label>
+            <input type="text" id="nombres" name="nombres">
+            
+            <label for="p_apellido">Primer Apellido:</label>
+            <input type="text" id="p_apellido" name="p_apellido">
+
+            <label for="s_apellido">Segundo Apellido:</label>
+            <input type="text" id="s_apellido" name="s_apellido">
+
+            <label for="fecha">Fecha de nacimiento:</label>
+            <input type="date" id="fecha" name="fecha" required>
+
+            <!-- <label for="sexo">Sexo:</label>
+            <input type="text" id="sexo" name="sexo"> -->
+
+            <label for="sexo">Sexo:</label>
+            <select id="sexo" name="sexo" required>
+              <option value="M">Masculino</option>
+              <option value="F">Femenino</option>
+            </select>
+
+            <label for="ci">CI:</label>
+            <input type="text" id="ci" name="ci">
+
+            <label for="email">Correo electronico:</label>
+            <input type="text" id="email" name="email">
+
+            <label for="direccion">Direccion:</label>
+            <input type="text" id="direccion" name="direccion">
+
+            <label for="matricula">Matricula profesinal:</label>
+            <input type="text" id="matricula" name="matricula">
+            
+            <!-- Contenedor para los números de teléfono -->
+            <div id="telefonosContainer">
+              <label for="telefono">Teléfonos:</label>
+              <input type="text" name="telefono">
+            </div>
+            <button type="button" onclick="agregarTelefono()">Agregar Teléfono</button>
+
+            <!-- TODO: agregar especialidades -->
+            <div id="especialidadesContainer">
+              <label for="especialidad">Especialidades:</label>
+              <select name="especialidad">
+                {% for especialidad in especialidades %}
+                <option value="{{ especialidad.id }}">{{ especialidad.descripcion }}</option>
+                {% endfor %}
+              </select>
+            </div>
+            <button type="button" onclick="agregarEspecialidad()">Agregar Especialidad</button>
+
+            <!-- <label for="monto">Monto:</label>
+            <input type="number" id="monto" name="monto" step="0.01" required> -->
+
+            <!-- <label for="descartado">Descartado:</label>
+            <input type="checkbox" id="descartado" name="descartado" value="1"> -->
+
+            <button type="submit">Registrar</button>
+          </form>
+        </div>
+      </div>
+
+      <!-- Modal para registrar dueño -->
+      <div id="editModal" class="modal">
+        <div class="modal-content">
+          <span class="close" onclick="closeEditModal()">&times;</span>
+          <h4>Editar Egreso</h4>
+          <form id="editEgresoForm" onsubmit="event.preventDefault(); editarEgreso();">
+            <input type="hidden" id="edit_id">
+
+            <label for="edit_fecha">Fecha:</label>
+            <input type="date" id="edit_fecha" name="edit_fecha" required>
+
+            <label for="edit_monto">Monto:</label>
+            <input type="number" id="edit_monto" name="edit_monto" step="0.01" required>
+
+            <label for="edit_observacion">Observación:</label>
+            <input type="text" id="edit_observacion" name="edit_observacion">
+
+            <label for="edit_egreso_tipo_id">Tipo de Egreso:</label>
+            <select id="edit_egreso_tipo_id" name="edit_egreso_tipo_id" required>
+            </select>
+
+            <label for="edit_descartado">Descartado:</label>
+            <input type="checkbox" id="edit_descartado" name="edit_descartado" value="1">
+
+            <button type="submit">Actualizar</button>
+          </form>
+        </div>
+      </div>
+
+
+      <table border="1">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Nombre Completo</th>
+            <th>Especialidad</th>
+            <th>sexo</th>
+            <th>CI</th>
+            <th>Matricula Profesional</th>
+            <th>Estado</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% if doctores %}
+          {% for doctor in doctores %}
+          <tr>
+            <td>{{ doctor.id }}</td>
+            <td>{{ doctor.nombre }}</td>
+            <td>{{ doctor.especialidad }}</td>
+            <td>{{ doctor.sexo }}</td>
+            <td>{{ doctor.ci }}</td>
+            <td>{{ doctor.matricula_profesional }}</td>
+            <td>{{ doctor.estado }}</td>
+
+            <td>
+              <button class="btn btn-edit" onclick="openEditModal()">Editar</button>
+              <button class="btn btn-edit" onclick="activar_inactivar('{{doctor.id}}', '{{doctor.estado}}')">{{ 'registrar Retiro' if doctor.estado == 'A' else 'Registrar Ingreso' }}</button>
+            </td>
+          </tr>
+          {% endfor %}
+          {% else %}
+          <tr>
+            <td colspan="6" style="text-align: center;">No hay doctores registrados.</td>
+          </tr>
+          {% endif %}
+        </tbody>
+      </table>
+
+    </div>
+  </div>
+</body>
+
+</html>

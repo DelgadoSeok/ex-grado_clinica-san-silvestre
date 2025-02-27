@@ -25,6 +25,7 @@ from routes.pagos_secre_route import pagos_secre_bp
 from routes.consultas_route import consultas_bp
 
 from routes.doctor_route import doctor_bp
+from routes.paciente_route import paciente_bp
 
 from routes.asignar_consultorios_route import asignar_consultorios_bp
 
@@ -55,10 +56,11 @@ app.register_blueprint(consultas_bp)
 
 
 app.register_blueprint(doctor_bp)
+app.register_blueprint(paciente_bp)
 
 app.register_blueprint(asignar_consultorios_bp)
 
-app.register_blueprint(reportes_bp)
+# app.register_blueprint(reportes_bp)
 
 
 # Context processor para compartir el rol de usuario en todas las plantillas
