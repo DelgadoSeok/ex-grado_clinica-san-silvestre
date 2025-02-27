@@ -30,6 +30,8 @@ from routes.asignar_consultorios_route import asignar_consultorios_bp
 
 from routes.reportes_routes import reportes_bp
 
+from routes.consultorios_route import consultorios_bp
+
 
 # inicializar aplicacion
 app = Flask(__name__)
@@ -53,12 +55,13 @@ app.register_blueprint(pagos_secre_bp)
 # para clinica
 app.register_blueprint(consultas_bp)
 
-
 app.register_blueprint(doctor_bp)
 
 app.register_blueprint(asignar_consultorios_bp)
 
 app.register_blueprint(reportes_bp)
+
+app.register_blueprint(consultorios_bp)
 
 
 # Context processor para compartir el rol de usuario en todas las plantillas
