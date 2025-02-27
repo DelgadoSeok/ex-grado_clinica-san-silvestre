@@ -3,6 +3,14 @@ from services.reportes_service import obtener_reporte_dinero_recaudado
 
 reportes_bp = Blueprint('reportes', __name__)
 
+@reportes_bp.route('/reporte_dinero', methods=['GET'])
+def reporte_consultas():
+    return render_template('reportes.html') 
+
+@reportes_bp.route('/reporte_consultas', methods=['GET'])
+def reporte_consultas():
+    return render_template('reportes.html') 
+
 @reportes_bp.route('/api/reporte_dinero', methods=['GET'])
 def reporte_dinero():
     fecha_inicio = request.args.get('fecha_inicio')
