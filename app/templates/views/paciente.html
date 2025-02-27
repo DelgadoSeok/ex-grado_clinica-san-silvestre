@@ -4,9 +4,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Gestionar Doctores</title>
+  <title>Gestionar Pacientes</title>
   <link rel="stylesheet" href="styles.css">
-  <script src="../../static/js/doctor.js"></script>
+  <script src="../../static/js/paciente.js"></script>
 </head>
 
 <body>
@@ -14,19 +14,19 @@
   {% include 'shared/menu.html' %}
 
   <div class="content">
-    <h2>Gestion de doctor</h2>
+    <h2>Gestion de paciente</h2>
     <div id="egresos" class="section">
       <div class="section-header">
-        <h3>Lista de doctores</h3>
-        <button onclick="openModal()">Registrar Nuevo Doctor</button>
+        <h3>Lista de pacientes</h3>
+        <button onclick="openModal()">Registrar Nuevo Paciente</button>
       </div>
 
       <!-- Modal para registrar nuevo doctor -->
       <div id="modal" class="modal">
         <div class="modal-content">
           <span class="close" onclick="closeModal()">&times;</span>
-          <h4>Registrar nuevo doctor</h4>
-          <form id="nuevoDoctorForm" onsubmit="event.preventDefault(); registrarDoctor();">
+          <h4>Registrar nuevo paciente</h4>
+          <form id="nuevoDoctorForm" onsubmit="event.preventDefault(); registrarPaciente();">
 
             <label for="nombres">Nombres:</label>
             <input type="text" id="nombres" name="nombres">
@@ -58,8 +58,8 @@
             <label for="direccion">Direccion:</label>
             <input type="text" id="direccion" name="direccion">
 
-            <label for="matricula">Matricula profesinal:</label>
-            <input type="text" id="matricula" name="matricula">
+            <!-- <label for="matricula">Matricula profesinal:</label>
+            <input type="text" id="matricula" name="matricula"> -->
             
             <!-- Contenedor para los números de teléfono -->
             <div id="telefonosContainer">
@@ -68,7 +68,7 @@
             </div>
             <button type="button" onclick="agregarTelefono()">Agregar Teléfono</button>
 
-            <!-- TODO: agregar especialidades -->
+            <!-- TODO: agregar especialidades
             <div id="especialidadesContainer">
               <label for="especialidad">Especialidades:</label>
               <select name="especialidad">
@@ -77,7 +77,7 @@
                 {% endfor %}
               </select>
             </div>
-            <button type="button" onclick="agregarEspecialidad()">Agregar Especialidad</button>
+            <button type="button" onclick="agregarEspecialidad()">Agregar Especialidad</button> -->
 
             <!-- <label for="monto">Monto:</label>
             <input type="number" id="monto" name="monto" step="0.01" required> -->
@@ -125,35 +125,33 @@
           <tr>
             <th>ID</th>
             <th>Nombre Completo</th>
-            <th>Especialidad</th>
             <th>sexo</th>
             <th>CI</th>
-            <th>Matricula Profesional</th>
-            <th>Estado</th>
+            <th>Dirección de Correo</th>
+            <th>Nro. Carpeta Historia Clinica</th>
             <th>Acciones</th>
           </tr>
         </thead>
         <tbody>
-          {% if doctores %}
-          {% for doctor in doctores %}
+          {% if pacientes %}
+          {% for paciente in pacientes %}
           <tr>
-            <td>{{ doctor.id }}</td>
-            <td>{{ doctor.nombre }}</td>
-            <td>{{ doctor.especialidad }}</td>
-            <td>{{ doctor.sexo }}</td>
-            <td>{{ doctor.ci }}</td>
-            <td>{{ doctor.matricula_profesional }}</td>
-            <td>{{ doctor.estado }}</td>
+            <td>{{ paciente.id }}</td>
+            <td>{{ paciente.nombre }}</td>
+            <td>{{ paciente.sexo }}</td>
+            <td>{{ paciente.ci }}</td>
+            <td>{{ paciente.email }}</td>
+            <td>{{ paciente.nro_carpeta_fisica }}</td>
 
             <td>
               <button class="btn btn-edit" onclick="openEditModal()">Editar</button>
-              <button class="btn btn-edit" onclick="activar_inactivar('{{doctor.id}}', '{{doctor.estado}}')">{{ 'registrar Retiro' if doctor.estado == 'A' else 'Registrar Ingreso' }}</button>
+              <button class="btn btn-edit" onclick="activar_inactivar('{{paciente.id}}', '{{paciente.estado}}')">{{ 'registrar Retiro' if paciente.estado == 'A' else 'Registrar Ingreso' }}</button>
             </td>
           </tr>
           {% endfor %}
           {% else %}
           <tr>
-            <td colspan="6" style="text-align: center;">No hay doctores registrados.</td>
+            <td colspan="6" style="text-align: center;">No hay pacientes registrados.</td>
           </tr>
           {% endif %}
         </tbody>

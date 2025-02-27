@@ -79,7 +79,7 @@ function registrarDoctor() {
         // cargarEgresos();
         // cargarTiposEgreso();
       })
-      .catch(error => console.error('Error al registrar egreso:', error));
+      .catch(error => console.error('Error al registrar doctor:', error));
   }
 
 

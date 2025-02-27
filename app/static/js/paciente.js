@@ -23,25 +23,25 @@ function agregarTelefono() {
 }
 
 // Función para agregar un nuevo select de especialidad
-function agregarEspecialidad() {
-  const especialidadesContainer = document.getElementById('especialidadesContainer');
-  const nuevoSelect = document.createElement('select');
-  nuevoSelect.name = 'especialidad';
+// function agregarEspecialidad() {
+//   const especialidadesContainer = document.getElementById('especialidadesContainer');
+//   const nuevoSelect = document.createElement('select');
+//   nuevoSelect.name = 'especialidad';
 
-  // Copiar las opciones del primer select
-  const opciones = document.querySelector("[name='especialidad']").options;
-  for (let i = 0; i < opciones.length; i++) {
-    const opcion = document.createElement('option');
-    opcion.value = opciones[i].value;
-    opcion.text = opciones[i].text;
-    nuevoSelect.appendChild(opcion);
-  }
+//   // Copiar las opciones del primer select
+//   const opciones = document.querySelector("[name='especialidad']").options;
+//   for (let i = 0; i < opciones.length; i++) {
+//     const opcion = document.createElement('option');
+//     opcion.value = opciones[i].value;
+//     opcion.text = opciones[i].text;
+//     nuevoSelect.appendChild(opcion);
+//   }
 
-  especialidadesContainer.appendChild(nuevoSelect);
-}
+//   especialidadesContainer.appendChild(nuevoSelect);
+// }
 
 // registra nuevo doctor en db
-function registrarDoctor() {
+function registrarPaciente() {
     let nuevoDoctorForm = document.getElementById("nuevoDoctorForm");
 
     let nombres = nuevoDoctorForm.querySelector("[name='nombres']").value;
@@ -52,24 +52,17 @@ function registrarDoctor() {
     let ci = nuevoDoctorForm.querySelector("[name='ci']").value;
     let email = nuevoDoctorForm.querySelector("[name='email']").value;
     let direccion = nuevoDoctorForm.querySelector("[name='direccion']").value;
-    let matricula = nuevoDoctorForm.querySelector("[name='matricula']").value;
 
     // Obtener todos los números de teléfono
     let telefonos = [];
     nuevoDoctorForm.querySelectorAll("[name='telefono']").forEach(input => {
         telefonos.push(input.value);
     });
-    // Obtener todas las especialidades seleccionadas
-    let especialidades = [];
-    nuevoDoctorForm.querySelectorAll("[name='especialidad']").forEach(select => {
-      especialidades.push(select.value);
-    });
 
-  
-    fetch('/doctor/registrar', {
+    fetch('/paciente/registrar', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ nombres, pApellido, sApellido, fechaNacimiento, sexo, ci, email, direccion, matricula, telefonos, especialidades })
+      body: JSON.stringify({ nombres, pApellido, sApellido, fechaNacimiento, sexo, ci, email, direccion, telefonos })
     })
       .then(response => response.json())
       .then(data => {
@@ -79,7 +72,7 @@ function registrarDoctor() {
         // cargarEgresos();
         // cargarTiposEgreso();
       })
-      .catch(error => console.error('Error al registrar egreso:', error));
+      .catch(error => console.error('Error al registrar paciente:', error));
   }
 
 

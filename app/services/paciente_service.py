@@ -1,47 +1,43 @@
 from config.db import get_db_connection
 
 
-def ver_doctores():
-    """ Obtiene la lista de doctores desde la base de datos """
+def ver_pacientes():
+    """ Obtiene la lista de pacientes desde la base de datos """
     try:
         db = get_db_connection()
         cursor = db.cursor()
 
         consulta = """
         SELECT 
-            d.id AS id,
-            CONCAT_WS(' ',p.nombres,p.p_apellido,p.s_apellido) nombre,
-            -- concatenar todas las especialidades agrupadas del doctor
-            IFNULL(GROUP_CONCAT(e.descripcion SEPARATOR ', '), 'Ninguna') AS especialidad,
+            p.id AS id,
+            CONCAT_WS(' ', p.nombres, p.p_apellido, p.s_apellido) AS nombre,
             p.sexo,
             p.ci,
-            d.matricula_profesional,
-            d.estado
-        FROM doctor d
-        INNER JOIN persona p ON p.id = d.id
-        LEFT JOIN doctor_especialidad de ON de.doctor_id = d.id
-        LEFT JOIN especialidad e ON e.id = de.especialidad_id
-        -- agrupar por id de doctor
-        GROUP BY d.id;
-
+            p.email,
+            p.direccion,
+            IFNULL(hc.nro_carpeta_fisica, 'No tiene aún') AS nro_carpeta_fisica
+        FROM paciente pa
+        INNER JOIN persona p ON p.id = pa.id
+        LEFT JOIN historia_clinica hc ON hc.paciente_id = pa.id
+        ORDER BY p.id;
         """
         
         cursor.execute(consulta)  # Ejecutar consulta SQL
 
-         # Obtener nombres de columnas de manera dinámica
+        # Obtener nombres de columnas de manera dinámica
         columnas = [desc[0] for desc in cursor.description]
 
         # Obtener resultados y construir lista de diccionarios
-        doctores = []
+        pacientes = []
         for row in cursor.fetchall():
-            doctores.append(dict(zip(columnas, row)))  # Empareja cada columna con su valor en la fila
+            pacientes.append(dict(zip(columnas, row)))  # Empareja cada columna con su valor en la fila
 
         cursor.close()
         db.close()
-        return doctores
+        return pacientes
 
     except Exception as e:
-        print(f"Error al obtener doctores: {str(e)}")
+        print(f"Error al obtener pacientes: {str(e)}")
         return []
 
 
@@ -84,20 +80,20 @@ def registrar_persona(data):
 
 
 # agregar datos a la tabla doctor
-def registrar_doctor(data, persona_id):
+def registrar_paciente(persona_id, fecha_registro):
 
     try:
         db = get_db_connection()
         cursor = db.cursor()
 
         consulta = """
-        INSERT INTO doctor (id, matricula_profesional)
+        INSERT INTO paciente (id, fecha_registro)
         VALUES (%s, %s)
         """
 
         valores = (
             persona_id,
-            data['matricula']
+            fecha_registro
         )
         
         cursor.execute(consulta, valores)  # Ejecutar consulta SQL
@@ -105,7 +101,7 @@ def registrar_doctor(data, persona_id):
 
         cursor.close()
         db.close()
-        return {"success": True, "message": "Persona registrada correctamente"}
+        return {"success": True, "message": "Paciente registrado correctamente"}
 
     except Exception as e:
         return {"success": False, "error": str(e)}
