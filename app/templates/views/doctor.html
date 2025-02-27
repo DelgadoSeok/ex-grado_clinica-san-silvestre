@@ -14,11 +14,10 @@
   {% include 'shared/menu.html' %}
 
   <div class="content">
-    <h2>Bienvenido :D</h2>
-    <p>Seleccione una opción del menú.</p>
+    <h2>Gestion de doctor</h2>
     <div id="egresos" class="section">
       <div class="section-header">
-        <h3>Gestión de Egresos</h3>
+        <h3>Lista de doctores</h3>
         <button onclick="openModal()">Registrar Nuevo Doctor</button>
       </div>
 
@@ -70,6 +69,15 @@
             <button type="button" onclick="agregarTelefono()">Agregar Teléfono</button>
 
             <!-- TODO: agregar especialidades -->
+            <div id="especialidadesContainer">
+              <label for="especialidad">Especialidades:</label>
+              <select name="especialidad">
+                {% for especialidad in especialidades %}
+                <option value="{{ especialidad.id }}">{{ especialidad.descripcion }}</option>
+                {% endfor %}
+              </select>
+            </div>
+            <button type="button" onclick="agregarEspecialidad()">Agregar Especialidad</button>
 
             <!-- <label for="monto">Monto:</label>
             <input type="number" id="monto" name="monto" step="0.01" required> -->
@@ -112,7 +120,6 @@
       </div>
 
 
-      <h3>Lista de Doctores</h3>
       <table border="1">
         <thead>
           <tr>
@@ -122,8 +129,8 @@
             <th>sexo</th>
             <th>CI</th>
             <th>Matricula Profesional</th>
-            <th>Acciones</th>
             <th>Estado</th>
+            <th>Acciones</th>
           </tr>
         </thead>
         <tbody>
@@ -140,7 +147,7 @@
 
             <td>
               <button class="btn btn-edit" onclick="openEditModal()">Editar</button>
-              <button class="btn btn-edit" onclick="openEditModal()">Cambiar Estado</button>
+              <button class="btn btn-edit" onclick="activar_inactivar('{{doctor.id}}', '{{doctor.estado}}')">{{ 'registrar Retiro' if doctor.estado == 'A' else 'Registrar Ingreso' }}</button>
             </td>
           </tr>
           {% endfor %}

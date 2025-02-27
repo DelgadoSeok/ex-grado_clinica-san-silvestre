@@ -1,37 +1,6 @@
 from config.db import get_db_connection
 
-# def ver_duenos():
-#     """ Obtiene la lista de dueños desde el procedimiento almacenado `ver_dueno` """
-#     try:
-#         db = get_db_connection()
-#         cursor = db.cursor()
 
-#         cursor.callproc("ver_dueno")  # Llamar al procedimiento almacenado
-
-#         # Obtener resultados
-#         duenos = []
-#         for result in cursor.stored_results():  # IMPORTANTE: obtener los resultados correctamente
-#             for row in result.fetchall():
-#                 duenos.append({
-#                     "id": row[0],
-#                     "nombres": row[1],
-#                     "apellidos": row[2],
-#                     "ci": row[3],
-#                     "telefono": row[4],
-#                     "direccion": row[5]
-#                 })
-
-#         cursor.close()
-#         db.close()
-
-#         print("Dueños obtenidos:", duenos)  # Depuración en la consola
-
-#         return duenos
-
-#     except Exception as e:
-#         print(f"Error al obtener dueños: {str(e)}")
-#         return []
-    
 def ver_doctores():
     """ Obtiene la lista de doctores desde la base de datos """
     try:
@@ -199,21 +168,131 @@ def registrar_telefono(persona_id, nro_telefonico):
         print({"success": False, "error": str(e)})
         return {"success": False, "error": str(e)}
 
-# def registrar_dueno(nombres, apellidos, ci, telf, direccion):
-#     """ Registra un nuevo dueño usando el procedimiento almacenado `registrar_dueno` """
-#     try:
-#         db = get_db_connection()
-#         cursor = db.cursor()
 
-#         cursor.callproc("registrar_dueno", (nombres, apellidos, ci, telf, direccion))
-#         db.commit()
+def ver_especialidades():
 
-#         cursor.close()
-#         db.close()
-#         return {"success": True, "message": "Dueño registrado correctamente"}
+    try:
+        db = get_db_connection()
+        cursor = db.cursor()
 
-#     except Exception as e:
-#         return {"success": False, "error": str(e)}
+        consulta = """
+        SELECT 
+            id,
+            descripcion
+        FROM especialidad;
+        """
+        
+        cursor.execute(consulta)  # Ejecutar consulta SQL
+
+         # Obtener nombres de columnas de manera dinámica
+        columnas = [desc[0] for desc in cursor.description]
+
+        # Obtener resultados y construir lista de diccionarios
+        especialidades = []
+        for row in cursor.fetchall():
+            especialidades.append(dict(zip(columnas, row)))  # Empareja cada columna con su valor en la fila
+
+        cursor.close()
+        db.close()
+        return especialidades
+
+    except Exception as e:
+        print(f"Error al obtener especialidades: {str(e)}")
+        return []
+
+# agregar datos a la tabla doctor_especialidad
+def registrar_doctor_especialidad(doctor_id, especialidad_id):
+
+    try:
+        db = get_db_connection()
+        cursor = db.cursor()
+
+        consulta = """
+        INSERT INTO doctor_especialidad (doctor_id, especialidad_id)
+        VALUES (%s, %s)
+        """
+
+        valores = (
+            doctor_id,
+            especialidad_id
+        )
+        
+        cursor.execute(consulta, valores)  # Ejecutar consulta SQL
+        db.commit()  # Confirmar la transacción
+
+        cursor.close()
+        db.close()
+        return {"success": True, "message": "Especialidad agregada a doctor correctamente"}
+
+    except Exception as e:
+        return {"success": False, "error": str(e)}
+    
+
+# cambiar el estado del doctor
+def cambiar_estado(doctor_id, nuevo_estado):
+
+    try:
+        db = get_db_connection()
+        cursor = db.cursor()
+
+        consulta = """
+        UPDATE doctor
+        SET estado = %s
+        WHERE id = %s
+        """
+
+        valores = (
+            nuevo_estado,
+            doctor_id
+            
+        )
+        
+        cursor.execute(consulta, valores)  # Ejecutar consulta SQL
+        db.commit()  # Confirmar la transacción
+
+        cursor.close()
+        db.close()
+        return {"success": True, "message": "Estado de doctor cambiado correctamente"}
+
+    except Exception as e:
+        return {"success": False, "error": str(e)}
+
+
+# inactivar las asignaciones de consultorio del doctor indicado (descartar asignaciones, los consultorios quedan libres)
+def inactivar_asignaciones_consultorios(doctor_id):
+
+    try:
+        db = get_db_connection()
+        cursor = db.cursor()
+
+        consulta = """
+        UPDATE asignacion_consultorio
+        SET estado = 'I'
+        WHERE doctor_id = %s;
+        """
+
+        valores = (
+            doctor_id
+        )
+        
+        cursor.execute(consulta, valores)  # Ejecutar consulta SQL
+        db.commit()  # Confirmar la transacción
+
+        cursor.close()
+        db.close()
+        return {"success": True, "message": "Asingacines de consultorio inactivadas correctamente"}
+
+    except Exception as e:
+        return {"success": False, "error": str(e)}
+
+
+
+
+
+
+
+
+
 
 # def editar_dueno(dueno_id, nombres, apellidos, ci, telf, direccion):
 #     """ Edita los datos de un dueño usando el procedimiento almacenado `editar_dueno` """

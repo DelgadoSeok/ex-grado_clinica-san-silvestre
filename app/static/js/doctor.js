@@ -20,7 +20,25 @@ function agregarTelefono() {
     nuevoTelefono.type = 'text';
     nuevoTelefono.name = 'telefono';
     telefonosContainer.appendChild(nuevoTelefono);
+}
+
+// Función para agregar un nuevo select de especialidad
+function agregarEspecialidad() {
+  const especialidadesContainer = document.getElementById('especialidadesContainer');
+  const nuevoSelect = document.createElement('select');
+  nuevoSelect.name = 'especialidad';
+
+  // Copiar las opciones del primer select
+  const opciones = document.querySelector("[name='especialidad']").options;
+  for (let i = 0; i < opciones.length; i++) {
+    const opcion = document.createElement('option');
+    opcion.value = opciones[i].value;
+    opcion.text = opciones[i].text;
+    nuevoSelect.appendChild(opcion);
   }
+
+  especialidadesContainer.appendChild(nuevoSelect);
+}
 
 // registra nuevo doctor en db
 function registrarDoctor() {
@@ -41,12 +59,17 @@ function registrarDoctor() {
     nuevoDoctorForm.querySelectorAll("[name='telefono']").forEach(input => {
         telefonos.push(input.value);
     });
+    // Obtener todas las especialidades seleccionadas
+    let especialidades = [];
+    nuevoDoctorForm.querySelectorAll("[name='especialidad']").forEach(select => {
+      especialidades.push(select.value);
+    });
 
   
     fetch('/doctor/registrar', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ nombres, pApellido, sApellido, fechaNacimiento, sexo, ci, email, direccion, matricula, telefonos })
+      body: JSON.stringify({ nombres, pApellido, sApellido, fechaNacimiento, sexo, ci, email, direccion, matricula, telefonos, especialidades })
     })
       .then(response => response.json())
       .then(data => {
@@ -69,6 +92,38 @@ function openEditModal(id, fecha, monto, observacion, tipo, descartado) {
   document.getElementById('edit_descartado').checked = descartado;
 
   document.getElementById('editModal').style.display = 'block';
+}
+
+
+function activar_inactivar(doctor_id, doctor_estado) {
+  let proceder = false;
+
+  // si se retira un doctor activo, avisar de que se liberarán los consultorios
+  if(doctor_estado == 'A' && confirm("¿Retirar a este doctor hará que todos sus consultorios asignados ahora estén libres. Estás seguro de continuar?")){
+      proceder = true;
+  }
+  if(doctor_estado == 'I'){ proceder = true; }
+
+  if(proceder){
+    fetch('/doctor/activar_inactivar', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ doctor_id, doctor_estado })
+    })
+      .then(response => response.json())
+      .then(data => {
+        alert(data.message);
+        location.reload();
+        // closeModal();
+        // cargarEgresos();
+        // cargarTiposEgreso();
+      })
+      .catch(error => console.error('Error al registrar egreso:', error));
+  }
+
+
+  
+
 }
 
 // function editarEgreso() {

@@ -1,82 +1,122 @@
-{% extends 'shared/menu.html' %}
+<!DOCTYPE html>
+<html lang="es">
 
-{% block title %}Asignar Consultorios{% endblock %}
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gestión de Consultas</title>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
-{% block content %}
-<link rel="stylesheet" href="{{ url_for('static', filename='css/asignar_consultorios.css') }}">
-<script src="{{ url_for('static', filename='js/asignar_consultorios.js') }}"></script>
-<!-- Estructura del modal -->
-<div id="myModal" class="modal">
-  <div class="modal-content">
-    <span class="close" id="closeModal">&times;</span>
-    <h2>Asignar Consultorios</h2>
-    <form id="formAsignacion">
-      <label for="doctor_id">Doctor:</label>
-      <select name="doctor_id" id="doctor_id" required>
-        <option value="">Seleccione doctor</option>
-        {% for doctor in doctores %}
-          <option value="{{ doctor.id }}">{{ doctor.matricula_profesional }}</option>
-        {% endfor %}
-      </select>
+ 
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/asignar_consultorios.css') }}">
 
-      <label for="dia_semana">Día de la Semana (número):</label>
-      <input type="number" name="dia_semana" id="dia_semana" min="1" max="7" required>
+  <script src="{{ url_for('static', filename='js/asignar_consultorios.js') }}"></script>
+</head>
 
-      <label for="hora_ini">Hora Inicio:</label>
-      <input type="time" name="hora_ini" id="hora_ini" required>
+<body>
 
-      <label for="hora_fin">Hora Fin:</label>
-      <input type="time" name="hora_fin" id="hora_fin" required>
+  {% include 'shared/menu.html' %}
 
-      <label for="consultorio_id">Consultorio:</label>
-      <select name="consultorio_id" id="consultorio_id" required>
-        <option value="">Seleccione consultorio</option>
-        {% for consultorio in consultorios %}
-          <option value="{{ consultorio.id }}">{{ consultorio.nro_consultorio }}</option>
-        {% endfor %}
-      </select>
+  <!-- Estructura del modal -->
+  <div id="myModal" class="modal">
+    <div class="modal-content">
+      <span class="close" id="closeModal">&times;</span>
+      <h2>Asignar Consultorios</h2>
+      <form id="formAsignacion">
+        <label for="doctor_id">Doctor:</label>
+        <select name="doctor_id" id="doctor_id" required>
+          <option value="">Seleccione doctor</option>
+          {% for doctor in doctores %}
+            <option value="{{ doctor.id }}">{{ doctor.nombre_completo }}</option>
+          {% endfor %}
+        </select>
 
-      <button type="submit">Asignar</button>
-    </form>
-    <div id="mensaje"></div>
+        <label for="dia_semana">Día de la Semana:</label>
+        <select name="dia_semana" id="dia_semana" required>
+          <option value="">Seleccione día</option>
+          <option value="1">Lunes</option>
+          <option value="2">Martes</option>
+          <option value="3">Miércoles</option>
+          <option value="4">Jueves</option>
+          <option value="5">Viernes</option>
+          <option value="6">Sábado</option>
+          <option value="7">Domingo</option>
+        </select>
+
+        <label for="hora_ini">Hora Inicio:</label>
+        <input type="time" name="hora_ini" id="hora_ini" required>
+
+        <label for="hora_fin">Hora Fin:</label>
+        <input type="time" name="hora_fin" id="hora_fin" required>
+
+        <label for="consultorio_id">Consultorio:</label>
+        <select name="consultorio_id" id="consultorio_id" required>
+          <option value="">Seleccione consultorio</option>
+          {% for consultorio in consultorios %}
+            <option value="{{ consultorio.id }}">{{ consultorio.nro_consultorio }}</option>
+          {% endfor %}
+        </select>
+
+        <button type="submit">Asignar</button>
+      </form>
+      <div id="mensaje"></div>
+    </div>
   </div>
-</div>
 
-<!-- Tabla de Asignaciones Activas -->
-<div class="table-container">
-  <div class="title-button-container">
-    <h2>Asignaciones Activas</h2>
-    <button class="btnOpenModal" id="btnOpenModal">Asignar Consultorios</button>
+  
+  <!-- Tabla de Asignaciones Activas -->
+  <div class="table-container">
+    <h2 class="titulo-gestion">Gestión para asignar consultorio</h2>
+    <div class="title-button-container">
+      <h2>Asignaciones Activas</h2>
+      <button class="btnOpenModal" id="btnOpenModal">Asignar Consultorios</button>
+    </div>
+    <table>
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Doctor</th>
+          <th>Día Semana</th>
+          <th>Hora Inicio</th>
+          <th>Hora Fin</th>
+          <th>Consultorio</th>
+          <th>Acción</th>
+        </tr>
+      </thead>
+      <tbody id="tablaAsignaciones">
+        {% for asignacion in asignaciones %}
+        <tr id="asignacion-{{ asignacion.id }}">
+          <td>{{ asignacion.id }}</td>
+          <td>{{ asignacion.nombre_completo }}</td>
+          <td>
+            {% if asignacion.dia_semana == 1 %}
+              Lunes
+            {% elif asignacion.dia_semana == 2 %}
+              Martes
+            {% elif asignacion.dia_semana == 3 %}
+              Miércoles
+            {% elif asignacion.dia_semana == 4 %}
+              Jueves
+            {% elif asignacion.dia_semana == 5 %}
+              Viernes
+            {% elif asignacion.dia_semana == 6 %}
+              Sábado
+            {% elif asignacion.dia_semana == 7 %}
+              Domingo
+            {% else %}
+              {{ asignacion.dia_semana }}
+            {% endif %}
+          </td>
+          <td>{{ asignacion.hora_ini }}</td>
+          <td>{{ asignacion.hora_fin }}</td>
+          <td>{{ asignacion.nro_consultorio }}</td>
+          <td>
+            <button class="btnDeshabilitar" data-id="{{ asignacion.id }}">Inhabilitar</button>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
   </div>
-  <table>
-    <thead>
-      <tr>
-        <th>ID</th>
-        <th>Doctor</th>
-        <th>Día Semana</th>
-        <th>Hora Inicio</th>
-        <th>Hora Fin</th>
-        <th>Consultorio</th>
-        <th>Acción</th>
-      </tr>
-    </thead>
-    <tbody id="tablaAsignaciones">
-      {% for asignacion in asignaciones %}
-      <tr id="asignacion-{{ asignacion.id }}">
-        <td>{{ asignacion.id }}</td>
-        <td>{{ asignacion.matricula_profesional }}</td>
-        <td>{{ asignacion.dia_semana }}</td>
-        <td>{{ asignacion.hora_ini }}</td>
-        <td>{{ asignacion.hora_fin }}</td>
-        <td>{{ asignacion.nro_consultorio }}</td>
-        <td>
-          <button class="btnDeshabilitar" data-id="{{ asignacion.id }}">Inhabilitar</button>
-        </td>
-      </tr>
-      {% endfor %}
-    </tbody>
-  </table>
-</div>
-
-
-{% endblock %}
+</body>
+</html>
