@@ -61,7 +61,8 @@ app.register_blueprint(paciente_bp)
 
 app.register_blueprint(asignar_consultorios_bp)
 
-# app.register_blueprint(reportes_bp)
+app.register_blueprint(reportes_bp, url_prefix='/reportes')
+
 
 app.register_blueprint(consultorios_bp)
 
