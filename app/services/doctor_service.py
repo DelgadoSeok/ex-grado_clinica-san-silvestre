@@ -11,6 +11,12 @@ def ver_doctores():
         SELECT 
             d.id AS id,
             CONCAT_WS(' ',p.nombres,p.p_apellido,p.s_apellido) nombre,
+            p.nombres,
+            p.p_apellido,
+            p.s_apellido,
+            p.fecha_nacimiento,
+            p.email,
+            p.direccion,
             -- concatenar todas las especialidades agrupadas del doctor
             IFNULL(GROUP_CONCAT(e.descripcion SEPARATOR ', '), 'Ninguna') AS especialidad,
             p.sexo,
@@ -82,6 +88,40 @@ def registrar_persona(data):
     except Exception as e:
         return {"success": False, "error": str(e)}
 
+# actualizar datos en la tabla persona
+def editar_persona(data):
+
+    try:
+        db = get_db_connection()
+        cursor = db.cursor()
+
+        consulta = """
+        UPDATE persona
+        SET nombres = %s, p_apellido = %s, s_apellido = %s, fecha_nacimiento = %s, sexo = %s, ci = %s, email = %s, direccion = %s
+        WHERE id = %s
+        """
+
+        valores = (
+            data['nombres'],
+            data['pApellido'],
+            data['sApellido'],
+            data['fechaNacimiento'],
+            data['sexo'],
+            data['ci'],
+            data['email'],
+            data['direccion'],
+            data['doctorId']
+        )
+        
+        cursor.execute(consulta, valores)  # Ejecutar consulta SQL
+        db.commit()  # Confirmar la transacción
+
+        cursor.close()
+        db.close()
+        return {"success": True, "message": "Datos de paciente actualizados correctamente"}
+
+    except Exception as e:
+        return {"success": False, "error": str(e)}
 
 # agregar datos a la tabla doctor
 def registrar_doctor(data, persona_id):
