@@ -79,87 +79,90 @@ function registrarDoctor() {
         // cargarEgresos();
         // cargarTiposEgreso();
       })
-      .catch(error => console.error('Error al registrar egreso:', error));
+      .catch(error => console.error('Error al registrar doctor:', error));
   }
 
 
-function openEditModal(id, fecha, monto, observacion, tipo, descartado) {
-  document.getElementById('edit_id').value = id;
-  document.getElementById('edit_fecha').value = fecha;
-  document.getElementById('edit_monto').value = monto;
-  document.getElementById('edit_observacion').value = observacion;
-  document.getElementById('edit_egreso_tipo_id').value = tipo;
-  document.getElementById('edit_descartado').checked = descartado;
+function openEditModal(doctor_id, nombres, p_apellido, s_apellido, fecha_nacimiento, sexo, ci, email, direccion) {
+  let editDoctorForm = document.getElementById("editDoctorForm");
+
+  editDoctorForm.querySelector("[name='doctor_id']").value = doctor_id;
+  editDoctorForm.querySelector("[name='nombres']").value = nombres;
+  editDoctorForm.querySelector("[name='p_apellido']").value = p_apellido;
+  editDoctorForm.querySelector("[name='s_apellido']").value = s_apellido;
+  editDoctorForm.querySelector("[name='fecha']").value = fecha_nacimiento;
+  editDoctorForm.querySelector("[name='sexo']").value = sexo;
+  editDoctorForm.querySelector("[name='ci']").value = ci;
+  editDoctorForm.querySelector("[name='email']").value = email;
+  editDoctorForm.querySelector("[name='direccion']").value = direccion;
+  // editDoctorForm.querySelector("[name='matricula']").value = matricula;
 
   document.getElementById('editModal').style.display = 'block';
 }
 
 
-function activar_inactivar(doctor_id, doctor_estado) {
-  let proceder = false;
+// function activar_inactivar(doctor_id, doctor_estado) {
+//   let proceder = false;
 
-  // si se retira un doctor activo, avisar de que se liberarán los consultorios
-  if(doctor_estado == 'A' && confirm("¿Retirar a este doctor hará que todos sus consultorios asignados ahora estén libres. Estás seguro de continuar?")){
-      proceder = true;
-  }
-  if(doctor_estado == 'I'){ proceder = true; }
+//   // si se retira un doctor activo, avisar de que se liberarán los consultorios
+//   if(doctor_estado == 'A' && confirm("¿Retirar a este doctor hará que todos sus consultorios asignados ahora estén libres. Estás seguro de continuar?")){
+//       proceder = true;
+//   }
+//   if(doctor_estado == 'I'){ proceder = true; }
 
-  if(proceder){
-    fetch('/doctor/activar_inactivar', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ doctor_id, doctor_estado })
-    })
-      .then(response => response.json())
-      .then(data => {
-        alert(data.message);
-        location.reload();
-        // closeModal();
-        // cargarEgresos();
-        // cargarTiposEgreso();
-      })
-      .catch(error => console.error('Error al registrar egreso:', error));
-  }
+//   if(proceder){
+//     fetch('/doctor/activar_inactivar', {
+//       method: 'POST',
+//       headers: { 'Content-Type': 'application/json' },
+//       body: JSON.stringify({ doctor_id, doctor_estado })
+//     })
+//       .then(response => response.json())
+//       .then(data => {
+//         alert(data.message);
+//         location.reload();
+//         // closeModal();
+//         // cargarEgresos();
+//         // cargarTiposEgreso();
+//       })
+//       .catch(error => console.error('Error al registrar egreso:', error));
+//   }
 
 
   
 
-}
-
-// function editarEgreso() {
-//   let id = document.getElementById("edit_id").value;
-//   let fecha = document.getElementById("edit_fecha").value;
-//   let monto = document.getElementById("edit_monto").value;
-//   let observacion = document.getElementById("edit_observacion").value;
-//   let tipo = document.getElementById("edit_egreso_tipo_id").value;
-//   let descartado = document.getElementById("edit_descartado").checked ? 1 : 0;
-
-//   let dataToSend = {};
-
-//   if (observacion) dataToSend.observacion = observacion;
-//   if (monto) dataToSend.monto = monto;
-//   if (fecha) dataToSend.fecha = fecha;
-//   if (tipo) dataToSend.tipo = tipo;
-//   if (descartado) dataToSend.descartado = descartado;
-//   console.log("Enviando datos para editar:", dataToSend);
-
-//   fetch(`/egresos/editar/${id}`, {
-//     method: 'PUT',
-//     headers: { 'Content-Type': 'application/json' },
-//     body: JSON.stringify(dataToSend)
-//   })
-//     .then(response => response.json())
-//     .then(data => {
-//       console.log("Respuesta del servidor:", data);
-//       alert(data.mensaje);
-//       closeEditModal();
-//       location.reload();
-//       cargarEgresos();
-//       cargarTiposEgreso();
-
-//     })
-//     .catch(error => console.error('Error al editar egreso:', error));
 // }
+
+function editarDoctor() {
+  // let descartado = document.getElementById("edit_descartado").checked ? 1 : 0;
+
+  let editDoctorForm = document.getElementById("editDoctorForm");
+
+  let doctorId = editDoctorForm.querySelector("[name='doctor_id']").value;
+  let nombres = editDoctorForm.querySelector("[name='nombres']").value;
+  let pApellido = editDoctorForm.querySelector("[name='p_apellido']").value;
+  let sApellido = editDoctorForm.querySelector("[name='s_apellido']").value;
+  let fechaNacimiento = editDoctorForm.querySelector("[name='fecha']").value;
+  let sexo = editDoctorForm.querySelector("[name='sexo']").value;
+  let ci = editDoctorForm.querySelector("[name='ci']").value;
+  let email = editDoctorForm.querySelector("[name='email']").value;
+  let direccion = editDoctorForm.querySelector("[name='direccion']").value;
+  // let matricula = editDoctorForm.querySelector("[name='matricula']").value;
+
+  fetch('/doctor/editar_doctor', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ doctorId, nombres, pApellido, sApellido, fechaNacimiento, sexo, ci, email, direccion })
+  })
+    .then(response => response.json())
+    .then(data => {
+      alert(data.message);
+      location.reload();
+      closeModal();
+      // cargarEgresos();
+      // cargarTiposEgreso();
+    })
+    .catch(error => console.error('Error al editar doctor:', error));
+}
 
 // function cargarEgresos() {
 //   fetch('/egresos/')

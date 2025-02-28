@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clínica San Silvestre - Reporte Consultas</title>
+    <link rel="stylesheet" href="CssReporte.css">
+</head>
+<body>
+    <h1>Clínica San Silvestre</h1>
+    <div class="container">
+        <h2>Reporte de Consultas</h2>
+        
+        <label for="selectDoctor">Doctor:</label>
+        <select id="selectDoctor"></select>
+
+        <button onclick="cargarConsultas()">Generar Reporte</button>
+        <button onclick="window.print()">Imprimir</button>
+        
+        <table>
+            <thead>
+                <tr>
+                    <th>ID Consulta</th>
+                    <th>Paciente</th>
+                    <th>Fecha</th>
+                    <th>Doctor</th>
+                    <th>Importe</th>
+                </tr>
+            </thead>
+            <tbody id="tablaConsultas">
+                <!-- Datos cargados dinámicamente -->
+            </tbody>
+        </table>
+    </div>
+    
+    <script src="JsReporteConsultas.js"></script>
+</body>
+</html>

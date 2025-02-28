@@ -4,9 +4,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Gestionar Doctores</title>
+  <title>Gestionar Pacientes</title>
   <link rel="stylesheet" href="styles.css">
-  <script src="../../static/js/doctor.js"></script>
+  <script src="../../static/js/paciente.js"></script>
 </head>
 
 <body>
@@ -14,19 +14,19 @@
   {% include 'shared/menu.html' %}
 
   <div class="content">
-    <h2>Gestion de doctor</h2>
+    <h2>Gestion de paciente</h2>
     <div id="egresos" class="section">
       <div class="section-header">
-        <h3>Lista de doctores</h3>
-        <button onclick="openModal()">Registrar Nuevo Doctor</button>
+        <h3>Lista de pacientes</h3>
+        <button onclick="openModal()">Registrar Nuevo Paciente</button>
       </div>
 
       <!-- Modal para registrar nuevo doctor -->
       <div id="modal" class="modal">
         <div class="modal-content">
           <span class="close" onclick="closeModal()">&times;</span>
-          <h4>Registrar nuevo doctor</h4>
-          <form id="nuevoDoctorForm" onsubmit="event.preventDefault(); registrarDoctor();">
+          <h4>Registrar nuevo paciente</h4>
+          <form id="nuevoDoctorForm" onsubmit="event.preventDefault(); registrarPaciente();">
 
             <label for="nombres">Nombres:</label>
             <input type="text" id="nombres" name="nombres">
@@ -40,68 +40,8 @@
             <label for="fecha">Fecha de nacimiento:</label>
             <input type="date" id="fecha" name="fecha" required>
 
-            <label for="sexo">Sexo:</label>
-            <select id="sexo" name="sexo" required>
-              <option value="M">Masculino</option>
-              <option value="F">Femenino</option>
-            </select>
-
-            <label for="ci">CI:</label>
-            <input type="text" id="ci" name="ci">
-
-            <label for="email">Correo electronico:</label>
-            <input type="text" id="email" name="email">
-
-            <label for="direccion">Direccion:</label>
-            <input type="text" id="direccion" name="direccion">
-
-            <label for="matricula">Matricula profesinal:</label>
-            <input type="text" id="matricula" name="matricula">
-            
-            <!-- Contenedor para los números de teléfono -->
-            <div id="telefonosContainer">
-              <label for="telefono">Teléfonos:</label>
-              <input type="text" name="telefono">
-            </div>
-            <button type="button" onclick="agregarTelefono()">Agregar Teléfono</button>
-
-            <!-- TODO: agregar especialidades -->
-            <div id="especialidadesContainer">
-              <label for="especialidad">Especialidades:</label>
-              <select name="especialidad">
-                {% for especialidad in especialidades %}
-                <option value="{{ especialidad.id }}">{{ especialidad.descripcion }}</option>
-                {% endfor %}
-              </select>
-            </div>
-            <button type="button" onclick="agregarEspecialidad()">Agregar Especialidad</button>
-
-            <button type="submit">Registrar</button>
-          </form>
-        </div>
-      </div>
-
-      <!-- Modal para reditar datos de doctor -->
-      <div id="editModal" class="modal">
-        <div class="modal-content">
-          <span class="close" onclick="closeEditModal()">&times;</span>
-          <h4>Editar Doctor</h4>
-          <form id="editDoctorForm" onsubmit="event.preventDefault(); editarDoctor();">
-
-            <label for="doctor_id">Doctor ID:</label>
-            <input type="number" id="doctor_id" name="doctor_id" step="0.01" required readonly>
-
-            <label for="nombres">Nombres:</label>
-            <input type="text" id="nombres" name="nombres">
-            
-            <label for="p_apellido">Primer Apellido:</label>
-            <input type="text" id="p_apellido" name="p_apellido">
-
-            <label for="s_apellido">Segundo Apellido:</label>
-            <input type="text" id="s_apellido" name="s_apellido">
-
-            <label for="fecha">Fecha de nacimiento:</label>
-            <input type="date" id="fecha" name="fecha" required>
+            <!-- <label for="sexo">Sexo:</label>
+            <input type="text" id="sexo" name="sexo"> -->
 
             <label for="sexo">Sexo:</label>
             <select id="sexo" name="sexo" required>
@@ -120,11 +60,98 @@
 
             <!-- <label for="matricula">Matricula profesinal:</label>
             <input type="text" id="matricula" name="matricula"> -->
+            
+            <!-- Contenedor para los números de teléfono -->
+            <div id="telefonosContainer">
+              <label for="telefono">Teléfonos:</label>
+              <input type="text" name="telefono">
+            </div>
+            <button type="button" onclick="agregarTelefono()">Agregar Teléfono</button>
+
+            <!-- TODO: agregar especialidades
+            <div id="especialidadesContainer">
+              <label for="especialidad">Especialidades:</label>
+              <select name="especialidad">
+                {% for especialidad in especialidades %}
+                <option value="{{ especialidad.id }}">{{ especialidad.descripcion }}</option>
+                {% endfor %}
+              </select>
+            </div>
+            <button type="button" onclick="agregarEspecialidad()">Agregar Especialidad</button> -->
+
+            <!-- <label for="monto">Monto:</label>
+            <input type="number" id="monto" name="monto" step="0.01" required> -->
+
+            <!-- <label for="descartado">Descartado:</label>
+            <input type="checkbox" id="descartado" name="descartado" value="1"> -->
+
+            <button type="submit">Registrar</button>
+          </form>
+        </div>
+      </div>
+
+      <!-- Modal para editar -->
+      <div id="editModal" class="modal">
+        <div class="modal-content">
+          <span class="close" onclick="closeEditModal()">&times;</span>
+          <h4>Editar Paciente</h4>
+          <form id="editPacienteForm" onsubmit="event.preventDefault(); editarPaciente();">
+            <input type="hidden" id="edit_id">
+
+            <label for="paciente_id">Doctor ID:</label>
+            <input type="number" id="paciente_id" name="paciente_id" step="0.01" required readonly>
+
+            <label for="nombres">Nombres:</label>
+            <input type="text" id="nombres" name="nombres">
+            
+            <label for="p_apellido">Primer Apellido:</label>
+            <input type="text" id="p_apellido" name="p_apellido">
+
+            <label for="s_apellido">Segundo Apellido:</label>
+            <input type="text" id="s_apellido" name="s_apellido">
+
+            <label for="fecha">Fecha de nacimiento:</label>
+            <input type="date" id="fecha" name="fecha" required>
+
+            <label for="sexo">Sexo:</label>
+            <select id="sexo" name="sexo" required>
+              <option value="M">Masculino</option>
+              <option value="F">Femenino</option>
+            </select>
+
+            <label for="ci">CI:</label>
+            <input type="text" id="ci" name="ci">
+
+            <label for="email">Correo electronico:</label>
+            <input type="text" id="email" name="email">
+
+            <label for="direccion">Direccion:</label>
+            <input type="text" id="direccion" name="direccion">
 
             <button type="submit">Actualizar</button>
           </form>
         </div>
       </div>
+
+      <!-- Modal para crear historia clinica -->
+      <div id="nuevaHistoriaModal" class="modal">
+        <div class="modal-content">
+          <span class="close" onclick="cerrarModalNuevaHistoria()">&times;</span>
+          <h4>Crear Historia Clinica</h4>
+          <form id="nuevaHistoriaForm" onsubmit="event.preventDefault(); crearHistoriaClinica();">
+            <input type="hidden" id="edit_id">
+
+            <label for="paciente_id">Paciente ID:</label>
+            <input type="number" id="paciente_id" name="paciente_id" step="0.01" required readonly>
+
+            <label for="nro_carpeta_fisica">Número de carpeta física:</label>
+            <input type="text" id="nro_carpeta_fisica" name="nro_carpeta_fisica">
+
+            <button type="submit">Crear Historia Clinica</button>
+          </form>
+        </div>
+      </div>
+
 
 
       <table border="1">
@@ -132,35 +159,34 @@
           <tr>
             <th>ID</th>
             <th>Nombre Completo</th>
-            <th>Especialidad</th>
-            <th>Sexo</th>
+            <th>sexo</th>
             <th>CI</th>
-            <th>Matricula Profesional</th>
-            <th>Estado</th>
+            <th>Dirección de Correo</th>
+            <th>Nro. Carpeta Historia Clinica</th>
             <th>Acciones</th>
           </tr>
         </thead>
         <tbody>
-          {% if doctores %}
-          {% for doctor in doctores %}
+          {% if pacientes %}
+          {% for paciente in pacientes %}
           <tr>
-            <td>{{ doctor.id }}</td>
-            <td>{{ doctor.nombre }}</td>
-            <td>{{ doctor.especialidad }}</td>
-            <td>{{ doctor.sexo }}</td>
-            <td>{{ doctor.ci }}</td>
-            <td>{{ doctor.matricula_profesional }}</td>
-            <td>{{ doctor.estado }}</td>
+            <td>{{ paciente.id }}</td>
+            <td>{{ paciente.nombre }}</td>
+            <td>{{ paciente.sexo }}</td>
+            <td>{{ paciente.ci }}</td>
+            <td>{{ paciente.email }}</td>
+            <td>{{ paciente.nro_carpeta_fisica }}</td>
 
             <td>
-              <button class="btn btn-edit" onclick="openEditModal('{{doctor.id}}', '{{doctor.nombres}}', '{{doctor.p_apellido}}', '{{doctor.s_apellido}}', '{{doctor.fecha_nacimiento}}', '{{doctor.sexo}}', '{{doctor.ci}}', '{{doctor.email}}', '{{doctor.direccion}}')">Editar</button>
-              <button class="btn btn-edit" onclick="activar_inactivar('{{doctor.id}}', '{{doctor.estado}}')">{{ 'registrar Retiro' if doctor.estado == 'A' else 'Registrar Ingreso' }}</button>
-            </td>
+                <button class="btn btn-edit" onclick="openEditModal('{{paciente.id}}', '{{paciente.nombres}}', '{{paciente.p_apellido}}', '{{paciente.s_apellido}}', '{{paciente.fecha_nacimiento}}', '{{paciente.sexo}}', '{{paciente.ci}}', '{{paciente.email}}', '{{paciente.direccion}}')">Editar</button>
+                {% if paciente.nro_carpeta_fisica == "No tiene aún" %}
+                <button class="btn btn-edit" onclick="abrirNuevaHistoriaModal('{{paciente.id}}')">Crear Historia Clinica</button>
+                {% endif %}</td>
           </tr>
           {% endfor %}
           {% else %}
           <tr>
-            <td colspan="6" style="text-align: center;">No hay doctores registrados.</td>
+            <td colspan="6" style="text-align: center;">No hay pacientes registrados.</td>
           </tr>
           {% endif %}
         </tbody>

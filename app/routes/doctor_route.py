@@ -36,6 +36,24 @@ def registrar_nuevo_doctor():
 
     return jsonify(resultado)
 
+@doctor_bp.route('/editar_doctor', methods=['POST'])
+def editar_doctor():
+    data = request.json
+    resultado = editar_persona(data)
+
+    # # registrar los números de teléfono
+    # telefonos = data.get('telefonos', [])
+    # for telefono in telefonos:
+    #     registrar_telefono(resultado['persona_id'], telefono)
+
+    # # registrar especialidad/es de doctor
+    # especialidades = data.get('especialidades', [])
+    #     # si no hay ninguna especialidad, el bucle no se ejecutará, por lo que no registrará nada
+    # for especialidad in especialidades:
+    #     registrar_doctor_especialidad(resultado['persona_id'], especialidad)
+
+    return jsonify(resultado)
+
 # cambia el estado del doctor (activo/inactivo) y registrar el evento en el historial (ingreso/retiro) segun corresponda
 @doctor_bp.route('/activar_inactivar', methods=['POST'])
 def activar_inactivar():

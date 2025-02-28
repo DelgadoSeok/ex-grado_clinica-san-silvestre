@@ -1,53 +1,47 @@
 from config.db import get_db_connection
 
 
-def ver_doctores():
-    """ Obtiene la lista de doctores desde la base de datos """
+def ver_pacientes():
+    """ Obtiene la lista de pacientes desde la base de datos """
     try:
         db = get_db_connection()
         cursor = db.cursor()
 
         consulta = """
         SELECT 
-            d.id AS id,
-            CONCAT_WS(' ',p.nombres,p.p_apellido,p.s_apellido) nombre,
+            p.id AS id,
             p.nombres,
             p.p_apellido,
             p.s_apellido,
             p.fecha_nacimiento,
-            p.email,
-            p.direccion,
-            -- concatenar todas las especialidades agrupadas del doctor
-            IFNULL(GROUP_CONCAT(e.descripcion SEPARATOR ', '), 'Ninguna') AS especialidad,
+            CONCAT_WS(' ', p.nombres, p.p_apellido, p.s_apellido) AS nombre,
             p.sexo,
             p.ci,
-            d.matricula_profesional,
-            d.estado
-        FROM doctor d
-        INNER JOIN persona p ON p.id = d.id
-        LEFT JOIN doctor_especialidad de ON de.doctor_id = d.id
-        LEFT JOIN especialidad e ON e.id = de.especialidad_id
-        -- agrupar por id de doctor
-        GROUP BY d.id;
-
+            p.email,
+            p.direccion,
+            IFNULL(hc.nro_carpeta_fisica, 'No tiene aún') AS nro_carpeta_fisica
+        FROM paciente pa
+        INNER JOIN persona p ON p.id = pa.id
+        LEFT JOIN historia_clinica hc ON hc.paciente_id = pa.id
+        ORDER BY p.id;
         """
         
         cursor.execute(consulta)  # Ejecutar consulta SQL
 
-         # Obtener nombres de columnas de manera dinámica
+        # Obtener nombres de columnas de manera dinámica
         columnas = [desc[0] for desc in cursor.description]
 
         # Obtener resultados y construir lista de diccionarios
-        doctores = []
+        pacientes = []
         for row in cursor.fetchall():
-            doctores.append(dict(zip(columnas, row)))  # Empareja cada columna con su valor en la fila
+            pacientes.append(dict(zip(columnas, row)))  # Empareja cada columna con su valor en la fila
 
         cursor.close()
         db.close()
-        return doctores
+        return pacientes
 
     except Exception as e:
-        print(f"Error al obtener doctores: {str(e)}")
+        print(f"Error al obtener pacientes: {str(e)}")
         return []
 
 
@@ -88,7 +82,6 @@ def registrar_persona(data):
     except Exception as e:
         return {"success": False, "error": str(e)}
 
-# actualizar datos en la tabla persona
 def editar_persona(data):
 
     try:
@@ -110,7 +103,7 @@ def editar_persona(data):
             data['ci'],
             data['email'],
             data['direccion'],
-            data['doctorId']
+            data['pacienteId']
         )
         
         cursor.execute(consulta, valores)  # Ejecutar consulta SQL
@@ -118,26 +111,26 @@ def editar_persona(data):
 
         cursor.close()
         db.close()
-        return {"success": True, "message": "Datos de doctor actualizados correctamente"}
+        return {"success": True, "message": "Datos de paciente actualizados correctamente"}
 
     except Exception as e:
         return {"success": False, "error": str(e)}
 
 # agregar datos a la tabla doctor
-def registrar_doctor(data, persona_id):
+def registrar_paciente(persona_id, fecha_registro):
 
     try:
         db = get_db_connection()
         cursor = db.cursor()
 
         consulta = """
-        INSERT INTO doctor (id, matricula_profesional)
+        INSERT INTO paciente (id, fecha_registro)
         VALUES (%s, %s)
         """
 
         valores = (
             persona_id,
-            data['matricula']
+            fecha_registro
         )
         
         cursor.execute(consulta, valores)  # Ejecutar consulta SQL
@@ -145,28 +138,28 @@ def registrar_doctor(data, persona_id):
 
         cursor.close()
         db.close()
-        return {"success": True, "message": "Persona registrada correctamente"}
+        return {"success": True, "message": "Paciente registrado correctamente"}
 
     except Exception as e:
         return {"success": False, "error": str(e)}
 
 
 # agregar datos a la tabla hirotial_doctor (ingreso o retiro)
-def registrar_historial_doctor(doctor_id, fecha_registro, evento):
+def crear_nueva_historia_clinica(data, fecha_registro):
 
     try:
         db = get_db_connection()
         cursor = db.cursor()
 
         consulta = """
-        INSERT INTO doctor_historial (doctor_id, fecha_registro, evento)
+        INSERT INTO historia_clinica (nro_carpeta_fisica, fecha_registro, paciente_id)
         VALUES (%s, %s, %s)
         """
 
         valores = (
-            doctor_id,
+            data['nroCarpetaFisica'],
             fecha_registro,
-            evento
+            data['pacienteId']
         )
         
         cursor.execute(consulta, valores)  # Ejecutar consulta SQL
@@ -174,7 +167,7 @@ def registrar_historial_doctor(doctor_id, fecha_registro, evento):
 
         cursor.close()
         db.close()
-        return {"success": True, "message": "Evento de doctor registrado en historial de doctor correctamente"}
+        return {"success": True, "message": "Historia clinica de paciente creada correctamente"}
 
     except Exception as e:
         return {"success": False, "error": str(e)}
@@ -209,121 +202,121 @@ def registrar_telefono(persona_id, nro_telefonico):
         return {"success": False, "error": str(e)}
 
 
-def ver_especialidades():
+# def ver_especialidades():
 
-    try:
-        db = get_db_connection()
-        cursor = db.cursor()
+#     try:
+#         db = get_db_connection()
+#         cursor = db.cursor()
 
-        consulta = """
-        SELECT 
-            id,
-            descripcion
-        FROM especialidad;
-        """
+#         consulta = """
+#         SELECT 
+#             id,
+#             descripcion
+#         FROM especialidad;
+#         """
         
-        cursor.execute(consulta)  # Ejecutar consulta SQL
+#         cursor.execute(consulta)  # Ejecutar consulta SQL
 
-         # Obtener nombres de columnas de manera dinámica
-        columnas = [desc[0] for desc in cursor.description]
+#          # Obtener nombres de columnas de manera dinámica
+#         columnas = [desc[0] for desc in cursor.description]
 
-        # Obtener resultados y construir lista de diccionarios
-        especialidades = []
-        for row in cursor.fetchall():
-            especialidades.append(dict(zip(columnas, row)))  # Empareja cada columna con su valor en la fila
+#         # Obtener resultados y construir lista de diccionarios
+#         especialidades = []
+#         for row in cursor.fetchall():
+#             especialidades.append(dict(zip(columnas, row)))  # Empareja cada columna con su valor en la fila
 
-        cursor.close()
-        db.close()
-        return especialidades
+#         cursor.close()
+#         db.close()
+#         return especialidades
 
-    except Exception as e:
-        print(f"Error al obtener especialidades: {str(e)}")
-        return []
+#     except Exception as e:
+#         print(f"Error al obtener especialidades: {str(e)}")
+#         return []
 
-# agregar datos a la tabla doctor_especialidad
-def registrar_doctor_especialidad(doctor_id, especialidad_id):
+# # agregar datos a la tabla doctor_especialidad
+# def registrar_doctor_especialidad(doctor_id, especialidad_id):
 
-    try:
-        db = get_db_connection()
-        cursor = db.cursor()
+#     try:
+#         db = get_db_connection()
+#         cursor = db.cursor()
 
-        consulta = """
-        INSERT INTO doctor_especialidad (doctor_id, especialidad_id)
-        VALUES (%s, %s)
-        """
+#         consulta = """
+#         INSERT INTO doctor_especialidad (doctor_id, especialidad_id)
+#         VALUES (%s, %s)
+#         """
 
-        valores = (
-            doctor_id,
-            especialidad_id
-        )
+#         valores = (
+#             doctor_id,
+#             especialidad_id
+#         )
         
-        cursor.execute(consulta, valores)  # Ejecutar consulta SQL
-        db.commit()  # Confirmar la transacción
+#         cursor.execute(consulta, valores)  # Ejecutar consulta SQL
+#         db.commit()  # Confirmar la transacción
 
-        cursor.close()
-        db.close()
-        return {"success": True, "message": "Especialidad agregada a doctor correctamente"}
+#         cursor.close()
+#         db.close()
+#         return {"success": True, "message": "Especialidad agregada a doctor correctamente"}
 
-    except Exception as e:
-        return {"success": False, "error": str(e)}
+#     except Exception as e:
+#         return {"success": False, "error": str(e)}
     
 
-# cambiar el estado del doctor
-def cambiar_estado(doctor_id, nuevo_estado):
+# # cambiar el estado del doctor
+# def cambiar_estado(doctor_id, nuevo_estado):
 
-    try:
-        db = get_db_connection()
-        cursor = db.cursor()
+#     try:
+#         db = get_db_connection()
+#         cursor = db.cursor()
 
-        consulta = """
-        UPDATE doctor
-        SET estado = %s
-        WHERE id = %s
-        """
+#         consulta = """
+#         UPDATE doctor
+#         SET estado = %s
+#         WHERE id = %s
+#         """
 
-        valores = (
-            nuevo_estado,
-            doctor_id
+#         valores = (
+#             nuevo_estado,
+#             doctor_id
             
-        )
+#         )
         
-        cursor.execute(consulta, valores)  # Ejecutar consulta SQL
-        db.commit()  # Confirmar la transacción
+#         cursor.execute(consulta, valores)  # Ejecutar consulta SQL
+#         db.commit()  # Confirmar la transacción
 
-        cursor.close()
-        db.close()
-        return {"success": True, "message": "Estado de doctor cambiado correctamente"}
+#         cursor.close()
+#         db.close()
+#         return {"success": True, "message": "Estado de doctor cambiado correctamente"}
 
-    except Exception as e:
-        return {"success": False, "error": str(e)}
+#     except Exception as e:
+#         return {"success": False, "error": str(e)}
 
 
-# inactivar las asignaciones de consultorio del doctor indicado (descartar asignaciones, los consultorios quedan libres)
-def inactivar_asignaciones_consultorios(doctor_id):
+# # inactivar las asignaciones de consultorio del doctor indicado (descartar asignaciones, los consultorios quedan libres)
+# def inactivar_asignaciones_consultorios(doctor_id):
 
-    try:
-        db = get_db_connection()
-        cursor = db.cursor()
+#     try:
+#         db = get_db_connection()
+#         cursor = db.cursor()
 
-        consulta = """
-        UPDATE asignacion_consultorio
-        SET estado = 'I'
-        WHERE doctor_id = %s;
-        """
+#         consulta = """
+#         UPDATE asignacion_consultorio
+#         SET estado = 'I'
+#         WHERE doctor_id = %s;
+#         """
 
-        valores = (
-            doctor_id
-        )
+#         valores = (
+#             doctor_id
+#         )
         
-        cursor.execute(consulta, valores)  # Ejecutar consulta SQL
-        db.commit()  # Confirmar la transacción
+#         cursor.execute(consulta, valores)  # Ejecutar consulta SQL
+#         db.commit()  # Confirmar la transacción
 
-        cursor.close()
-        db.close()
-        return {"success": True, "message": "Asingacines de consultorio inactivadas correctamente"}
+#         cursor.close()
+#         db.close()
+#         return {"success": True, "message": "Asingacines de consultorio inactivadas correctamente"}
 
-    except Exception as e:
-        return {"success": False, "error": str(e)}
+#     except Exception as e:
+#         return {"success": False, "error": str(e)}
 
 
 

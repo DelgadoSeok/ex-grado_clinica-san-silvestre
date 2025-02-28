@@ -3,6 +3,14 @@ from services.reportes_service import obtener_reporte_dinero_recaudado
 
 reportes_bp = Blueprint('reportes', __name__)
 
+@reportes_bp.route('/reporte_dinero', methods=['GET'])
+def reporte_consultas():
+    return render_template('views/reporteDineros.html') 
+
+@reportes_bp.route('/reporte_consultas', methods=['GET'])
+def reporte_consultas():
+    return render_template('views/reporteConsultas.html') 
+
 @reportes_bp.route('/api/reporte_dinero', methods=['GET'])
 def reporte_dinero():
     fecha_inicio = request.args.get('fecha_inicio')
@@ -25,3 +33,8 @@ def reporte_consultas():
 
     datos = obtener_consultas_por_doctor(doctor_id, fecha_inicio, fecha_fin)
     return jsonify({"success": True, "data": datos})
+
+@reportes_bp.route('/api/doctores', methods=['GET'])
+def obtener_lista_doctores():
+    doctores = obtener_doctores()
+    return jsonify({"success": True, "data": doctores})
