@@ -10,14 +10,14 @@ def consultorios():
     return render_template('views/consultorios.html', consultorios=consultorios)
 
 @consultorios_bp.route('/registrar', methods=['POST'])
-def consultorios_dos():
+def registrar_consultorio():
     data = request.json
     print(data)
     resultado = registrar_consultorio(data)
     return jsonify(resultado)
 
 @consultorios_bp.route('/actualizar/<int:id>', methods=['PUT'])
-def actualizar_consultorio_route(id):
+def actualizar_consultorio(id):
     data = request.get_json()
     resultado = actualizar_consultorio(id, data)
     return jsonify(resultado)
