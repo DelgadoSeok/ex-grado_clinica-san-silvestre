@@ -95,24 +95,38 @@
         <div class="modal-content">
           <span class="close" onclick="closeEditModal()">&times;</span>
           <h4>Editar Paciente</h4>
-          <form id="editEgresoForm" onsubmit="event.preventDefault(); editarEgreso();">
+          <form id="editPacienteForm" onsubmit="event.preventDefault(); editarPaciente();">
             <input type="hidden" id="edit_id">
 
-            <label for="edit_fecha">Fecha:</label>
-            <input type="date" id="edit_fecha" name="edit_fecha" required>
+            <label for="paciente_id">Doctor ID:</label>
+            <input type="number" id="paciente_id" name="paciente_id" step="0.01" required readonly>
 
-            <label for="edit_monto">Monto:</label>
-            <input type="number" id="edit_monto" name="edit_monto" step="0.01" required>
+            <label for="nombres">Nombres:</label>
+            <input type="text" id="nombres" name="nombres">
+            
+            <label for="p_apellido">Primer Apellido:</label>
+            <input type="text" id="p_apellido" name="p_apellido">
 
-            <label for="edit_observacion">Observación:</label>
-            <input type="text" id="edit_observacion" name="edit_observacion">
+            <label for="s_apellido">Segundo Apellido:</label>
+            <input type="text" id="s_apellido" name="s_apellido">
 
-            <label for="edit_egreso_tipo_id">Tipo de Egreso:</label>
-            <select id="edit_egreso_tipo_id" name="edit_egreso_tipo_id" required>
+            <label for="fecha">Fecha de nacimiento:</label>
+            <input type="date" id="fecha" name="fecha" required>
+
+            <label for="sexo">Sexo:</label>
+            <select id="sexo" name="sexo" required>
+              <option value="M">Masculino</option>
+              <option value="F">Femenino</option>
             </select>
 
-            <label for="edit_descartado">Descartado:</label>
-            <input type="checkbox" id="edit_descartado" name="edit_descartado" value="1">
+            <label for="ci">CI:</label>
+            <input type="text" id="ci" name="ci">
+
+            <label for="email">Correo electronico:</label>
+            <input type="text" id="email" name="email">
+
+            <label for="direccion">Direccion:</label>
+            <input type="text" id="direccion" name="direccion">
 
             <button type="submit">Actualizar</button>
           </form>
@@ -164,7 +178,7 @@
             <td>{{ paciente.nro_carpeta_fisica }}</td>
 
             <td>
-              <button class="btn btn-edit" onclick="openEditModal()">Editar</button>
+                <button class="btn btn-edit" onclick="openEditModal('{{paciente.id}}', '{{paciente.nombres}}', '{{paciente.p_apellido}}', '{{paciente.s_apellido}}', '{{paciente.fecha_nacimiento}}', '{{paciente.sexo}}', '{{paciente.ci}}', '{{paciente.email}}', '{{paciente.direccion}}')">Editar</button>
                 {% if paciente.nro_carpeta_fisica == "No tiene aún" %}
                 <button class="btn btn-edit" onclick="abrirNuevaHistoriaModal('{{paciente.id}}')">Crear Historia Clinica</button>
                 {% endif %}</td>

@@ -10,6 +10,10 @@ def ver_pacientes():
         consulta = """
         SELECT 
             p.id AS id,
+            p.nombres,
+            p.p_apellido,
+            p.s_apellido,
+            p.fecha_nacimiento,
             CONCAT_WS(' ', p.nombres, p.p_apellido, p.s_apellido) AS nombre,
             p.sexo,
             p.ci,
@@ -78,6 +82,39 @@ def registrar_persona(data):
     except Exception as e:
         return {"success": False, "error": str(e)}
 
+def editar_persona(data):
+
+    try:
+        db = get_db_connection()
+        cursor = db.cursor()
+
+        consulta = """
+        UPDATE persona
+        SET nombres = %s, p_apellido = %s, s_apellido = %s, fecha_nacimiento = %s, sexo = %s, ci = %s, email = %s, direccion = %s
+        WHERE id = %s
+        """
+
+        valores = (
+            data['nombres'],
+            data['pApellido'],
+            data['sApellido'],
+            data['fechaNacimiento'],
+            data['sexo'],
+            data['ci'],
+            data['email'],
+            data['direccion'],
+            data['pacienteId']
+        )
+        
+        cursor.execute(consulta, valores)  # Ejecutar consulta SQL
+        db.commit()  # Confirmar la transacción
+
+        cursor.close()
+        db.close()
+        return {"success": True, "message": "Datos de paciente actualizados correctamente"}
+
+    except Exception as e:
+        return {"success": False, "error": str(e)}
 
 # agregar datos a la tabla doctor
 def registrar_paciente(persona_id, fecha_registro):

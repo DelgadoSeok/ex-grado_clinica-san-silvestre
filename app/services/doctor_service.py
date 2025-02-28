@@ -118,7 +118,7 @@ def editar_persona(data):
 
         cursor.close()
         db.close()
-        return {"success": True, "message": "Datos de paciente actualizados correctamente"}
+        return {"success": True, "message": "Datos de doctor actualizados correctamente"}
 
     except Exception as e:
         return {"success": False, "error": str(e)}

@@ -15,7 +15,7 @@ def paciente():
     return render_template('views/paciente.html', pacientes=pacientes)
 
 @paciente_bp.route('/registrar', methods=['POST'])
-def registrar_nuevo_doctor():
+def registrar_nuevo_paciente():
     data = request.json
     resultado = registrar_persona(data)
     registrar_paciente(resultado['persona_id'], datetime.now().date())
@@ -27,6 +27,15 @@ def registrar_nuevo_doctor():
         registrar_telefono(resultado['persona_id'], telefono)
 
     return jsonify(resultado)
+
+
+@paciente_bp.route('/editar_paciente', methods=['POST'])
+def editar_paciente():
+    data = request.json
+    resultado = editar_persona(data)
+
+    return jsonify(resultado)
+
 
 @paciente_bp.route('/crear_historia_clinica', methods=['POST'])
 def crear_historia_clinica():

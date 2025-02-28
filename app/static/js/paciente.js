@@ -111,20 +111,27 @@ function crearHistoriaClinica(paciente_id, nro_carpeta_fisica) {
 }
 
 function abrirNuevaHistoriaModal(paciente_id) {
-  document.getElementById('paciente_id').value = paciente_id;
+  let nuevaHistoriaForm = document.getElementById("nuevaHistoriaForm");
+  nuevaHistoriaForm.querySelector("[name='paciente_id']").value = paciente_id;
+
   document.getElementById('nuevaHistoriaModal').style.display = 'block';
 }
 
 
 
 
-function openEditModal(id, fecha, monto, observacion, tipo, descartado) {
-  document.getElementById('edit_id').value = id;
-  document.getElementById('edit_fecha').value = fecha;
-  document.getElementById('edit_monto').value = monto;
-  document.getElementById('edit_observacion').value = observacion;
-  document.getElementById('edit_egreso_tipo_id').value = tipo;
-  document.getElementById('edit_descartado').checked = descartado;
+function openEditModal(id, nombres, pApellido, sApellido, fechaNacimiento, sexo, ci, email, direccion) {
+  let editPacienteForm = document.getElementById("editPacienteForm");
+
+  editPacienteForm.querySelector("[name='paciente_id']").value = id;
+  editPacienteForm.querySelector("[name='nombres']").value = nombres;
+  editPacienteForm.querySelector("[name='p_apellido']").value = pApellido;
+  editPacienteForm.querySelector("[name='s_apellido']").value = sApellido;
+  editPacienteForm.querySelector("[name='fecha']").value = fechaNacimiento;
+  editPacienteForm.querySelector("[name='sexo']").value = sexo;
+  editPacienteForm.querySelector("[name='ci']").value = ci;
+  editPacienteForm.querySelector("[name='email']").value = email;
+  editPacienteForm.querySelector("[name='direccion']").value = direccion;
 
   document.getElementById('editModal').style.display = 'block';
 }
@@ -155,46 +162,36 @@ function activar_inactivar(doctor_id, doctor_estado) {
       })
       .catch(error => console.error('Error al registrar egreso:', error));
   }
-
-
-  
-
 }
 
-// function editarEgreso() {
-//   let id = document.getElementById("edit_id").value;
-//   let fecha = document.getElementById("edit_fecha").value;
-//   let monto = document.getElementById("edit_monto").value;
-//   let observacion = document.getElementById("edit_observacion").value;
-//   let tipo = document.getElementById("edit_egreso_tipo_id").value;
-//   let descartado = document.getElementById("edit_descartado").checked ? 1 : 0;
+function editarPaciente() {
+  let editPacienteForm = document.getElementById("editPacienteForm");
 
-//   let dataToSend = {};
+  let pacienteId = editPacienteForm.querySelector("[name='paciente_id']").value;
+  let nombres = editPacienteForm.querySelector("[name='nombres']").value;
+  let pApellido = editPacienteForm.querySelector("[name='p_apellido']").value;
+  let sApellido = editPacienteForm.querySelector("[name='s_apellido']").value;
+  let fechaNacimiento = editPacienteForm.querySelector("[name='fecha']").value;
+  let sexo = editPacienteForm.querySelector("[name='sexo']").value;
+  let ci = editPacienteForm.querySelector("[name='ci']").value;
+  let email = editPacienteForm.querySelector("[name='email']").value;
+  let direccion = editPacienteForm.querySelector("[name='direccion']").value;
 
-//   if (observacion) dataToSend.observacion = observacion;
-//   if (monto) dataToSend.monto = monto;
-//   if (fecha) dataToSend.fecha = fecha;
-//   if (tipo) dataToSend.tipo = tipo;
-//   if (descartado) dataToSend.descartado = descartado;
-//   console.log("Enviando datos para editar:", dataToSend);
-
-//   fetch(`/egresos/editar/${id}`, {
-//     method: 'PUT',
-//     headers: { 'Content-Type': 'application/json' },
-//     body: JSON.stringify(dataToSend)
-//   })
-//     .then(response => response.json())
-//     .then(data => {
-//       console.log("Respuesta del servidor:", data);
-//       alert(data.mensaje);
-//       closeEditModal();
-//       location.reload();
-//       cargarEgresos();
-//       cargarTiposEgreso();
-
-//     })
-//     .catch(error => console.error('Error al editar egreso:', error));
-// }
+  fetch('/paciente/editar_paciente', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ pacienteId, nombres, pApellido, sApellido, fechaNacimiento, sexo, ci, email, direccion })
+  })
+    .then(response => response.json())
+    .then(data => {
+      alert(data.message);
+      location.reload();
+      closeEditModal();
+      // cargarEgresos();
+      // cargarTiposEgreso();
+    })
+    .catch(error => console.error('Error al editar datos de paciente: ', error));
+}
 
 // function cargarEgresos() {
 //   fetch('/egresos/')
