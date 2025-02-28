@@ -60,7 +60,8 @@ app.register_blueprint(paciente_bp)
 
 app.register_blueprint(asignar_consultorios_bp)
 
-# app.register_blueprint(reportes_bp)
+app.register_blueprint(reportes_bp, url_prefix='/reportes')
+
 
 
 # Context processor para compartir el rol de usuario en todas las plantillas
